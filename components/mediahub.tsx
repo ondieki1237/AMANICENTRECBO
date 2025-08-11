@@ -1,63 +1,70 @@
 'use client'; // Required for client-side rendering in App Router
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import Head from 'next/head';
 import Image from 'next/image';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
+import Link from 'next/link';
 
 interface Story {
+  _id: string;
   title: string;
-  url: string;
+  slug: string;
+  excerpt: string;
   date: string;
   category: string;
-  image: string;
+  image: string | null;
 }
 
 const MediaHubPage: React.FC = () => {
   const [activeCategory, setActiveCategory] = useState<string>('All');
   const [activeTab, setActiveTab] = useState<string>('Blog');
+  const [stories, setStories] = useState<Story[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
-  const stories: Story[] = [
-    {
-      title: "Women leading change in climate resilience",
-      url: "https://example.com/women-climate-resilience",
-      date: "2022-03-08",
-      category: "Climate",
-      image: "/images/stories/women-climate.png",
-    },
-    {
-      title: "Youth entrepreneurship in tech hubs",
-      url: "https://example.com/youth-tech-hubs",
-      date: "2024-01-20",
-      category: "Technology",
-      image: "/images/stories/youth-tech.png",
-    },
-    {
-      title: "With schools shut by pandemic, solar radios keep Kenyan children learning",
-      url: "https://www.reuters.com/article/kenya-solar-education-coronavirus/feature-with-schools-shut-by-pandemic-solar-radios-keep-kenyan-children-learning-idUKL8N2IK45N/",
-      date: "2020-11-24",
-      category: "Education",
-      image: "/images/stories/radio.png",
-    },
-    {
-      title: "Empowering rural communities with solar energy",
-      url: "https://example.com/solar-energy-rural",
-      date: "2021-06-15",
-      category: "Energy",
-      image: "/images/stories/solar.png",
-    },
+  // Fetch blog posts from backend API
+  useEffect(() => {
+    const fetchPosts = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/news`, {
+          cache: 'no-store',
+        });
+        if (!response.ok) {
+          throw new Error(`Failed to fetch posts (status: ${response.status})`);
+        }
+        const data = await response.json();
+        console.log('Fetched posts:', data);
 
-    {
-      title: "Innovative farming techniques boost yields",
-      url: "https://example.com/innovative-farming",
-      date: "2023-09-10",
-      category: "Agriculture",
-      image: "/images/stories/farming.png",
-    },
-  ];
+        // Map API data to Story interface
+        const fetchedStories: Story[] = data
+          .filter((post: any) => post.slug && post.title && post.excerpt)
+          .map((post: any) => ({
+            _id: post._id,
+            title: post.title,
+            slug: post.slug,
+            excerpt: post.excerpt,
+            date: post.date.split('T')[0], // Format date (e.g., "2025-08-11")
+            category: post.category || 'General',
+            image: post.image || '/images/stories/fallback.png',
+          }));
+
+        setStories(fetchedStories);
+      } catch (err: any) {
+        setError(err.message || 'An error occurred while fetching posts');
+        console.error('Fetch Error:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPosts();
+  }, []);
 
   const categories = ['All', ...Array.from(new Set(stories.map(story => story.category)))];
 
@@ -70,7 +77,7 @@ const MediaHubPage: React.FC = () => {
     visible: {
       opacity: 1,
       y: 0,
-      transition: { duration: 0.6, ease: "easeOut" },
+      transition: { duration: 0.6, ease: 'easeOut' },
     },
   };
 
@@ -102,8 +109,8 @@ const MediaHubPage: React.FC = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       <Head>
-        <title>Media Hub | Amani Center</title>
-        <meta name="description" content="Explore our stories, podcasts, videos, and publications" />
+        <title>Media Hub | Amani Centre</title>
+        <meta name="description" content="Explore our blog posts and stories from Amani Centre" />
       </Head>
 
       {/* Banner Section */}
@@ -111,7 +118,7 @@ const MediaHubPage: React.FC = () => {
         <div className="container mx-auto px-4">
           <h1 className="text-4xl font-bold mb-4">Media Hub</h1>
           <p className="text-xl max-w-2xl mx-auto">
-            Discover our stories, podcasts, videos, and publications that showcase our impact
+            Discover our blog posts and stories showcasing Amani Centre's impact
           </p>
         </div>
       </section>
@@ -158,8 +165,23 @@ const MediaHubPage: React.FC = () => {
               ))}
             </div>
 
+            {/* Loading State */}
+            {loading && (
+              <div className="text-center py-16">
+                <p className="text-gray-600">Loading stories...</p>
+              </div>
+            )}
+
+            {/* Error State */}
+            {error && (
+              <div className="text-center py-16">
+                <p className="text-red-600">Error: {error}</p>
+                <p className="text-gray-600 mt-2">Please try again later or contact support.</p>
+              </div>
+            )}
+
             {/* Stories Carousel */}
-            {filteredStories.length > 0 ? (
+            {!loading && !error && filteredStories.length > 0 ? (
               <motion.div
                 initial="hidden"
                 animate="visible"
@@ -174,7 +196,7 @@ const MediaHubPage: React.FC = () => {
                 <Slider {...sliderSettings}>
                   {filteredStories.map((story) => (
                     <motion.article
-                      key={story.url}
+                      key={story._id}
                       className="px-2"
                       variants={itemVariants}
                       whileHover={{ y: -5 }}
@@ -182,12 +204,16 @@ const MediaHubPage: React.FC = () => {
                       <div className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-shadow">
                         <div className="h-48 bg-gray-200 overflow-hidden">
                           <Image
-                            src={story.image}
+                            src={story.image || '/images/stories/fallback.png'}
                             alt={story.title}
                             width={400}
                             height={192}
                             className="w-full h-full object-cover"
                             loading="lazy"
+                            onError={(e) => {
+                              console.error(`Failed to load image for story ${story.title}: ${story.image}`);
+                              (e.target as HTMLImageElement).src = '/images/stories/fallback.png';
+                            }}
                           />
                         </div>
                         <div className="p-6">
@@ -196,24 +222,23 @@ const MediaHubPage: React.FC = () => {
                           </span>
                           <h3 className="text-xl font-semibold mb-2">{story.title}</h3>
                           <p className="text-gray-500 text-sm mb-4">{story.date}</p>
-                          <a
-                            href={story.url}
-                            target="_blank"
-                            rel="noopener noreferrer"
+                          <Link
+                            href={`/blog/${encodeURIComponent(story.slug)}`}
                             className="text-[#E50914] font-medium hover:text-[#B91C1C] inline-flex items-center transition-colors"
+                            onClick={() => console.log(`Navigating to /blog/${story.slug}`)}
                           >
                             Read Story
                             <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
                             </svg>
-                          </a>
+                          </Link>
                         </div>
                       </div>
                     </motion.article>
                   ))}
                 </Slider>
               </motion.div>
-            ) : (
+            ) : !loading && !error && (
               <p className="text-gray-600 text-center">No stories available for this category.</p>
             )}
           </>
