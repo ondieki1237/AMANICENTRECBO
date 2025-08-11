@@ -1,0 +1,22 @@
+# Enable URL rewriting
+RewriteEngine On
+
+# Redirect all traffic to HTTPS
+RewriteCond %{HTTPS} off
+RewriteRule ^(.*)$ https://%{HTTP_HOST}/$1 [R=301,L]
+
+# Handle SPA routing for Next.js static export
+# Sends all requests to index.html if file/folder doesn't exist
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^ index.html [L]
+
+# Set cache headers for static assets
+<FilesMatch "\.(ico|jpg|jpeg|png|gif|js|css|woff|woff2|ttf|svg)$">
+    ExpiresActive On
+    ExpiresDefault "access plus 1 month"
+    Header set Cache-Control "public"
+</FilesMatch>
+
+# Custom error pages (optional)
+ErrorDocument 404 /index.html
