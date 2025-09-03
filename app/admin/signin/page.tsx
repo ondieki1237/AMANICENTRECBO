@@ -3,10 +3,10 @@
 import { useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import ModernNavbar from "@/components/modern-navbar";
+import { Card, CardContent, CardHeader, CardTitle } from "../../../components/ui/card";
+import { Button } from "../../../components/ui/button";
+import { Input } from "../../../components/ui/input";
+import ModernNavbar from "../../../components/modern-navbar";
 
 export default function SignIn() {
   const router = useRouter();
@@ -96,4 +96,4 @@ export default function SignIn() {
       </div>
     </div>
   );
-} 
+}

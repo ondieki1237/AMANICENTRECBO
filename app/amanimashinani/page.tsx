@@ -1,6 +1,6 @@
 "use client"
 import React, { useRef } from "react"
-import Footer from "@/components/footer"
+import Footer from "../../components/footer"
 import Navbar from "@/components/modern-navbar"
 import { motion, useInView } from "framer-motion"
 import Link from "next/link"
