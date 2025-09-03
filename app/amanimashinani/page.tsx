@@ -1,11 +1,11 @@
 "use client"
 import React, { useRef } from "react"
 import Footer from "../../components/footer"
-import Navbar from "@/components/modern-navbar"
+import Navbar from "../../components/modern-navbar"
+import { Button } from "../../components/ui/button"
 import { motion, useInView } from "framer-motion"
 import Link from "next/link"
 import Image from "next/image"
-import { Button } from "@/components/ui/button"
 
 const AmaniMashinani = () => {
   const fadeIn = {
