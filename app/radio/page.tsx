@@ -1,11 +1,8 @@
 "use client";
 
-import ModernNavbar from "@/components/modern-navbar";
-import Footer from "@/components/footer";
-import { Home, Radio } from "lucide-react";
-import { useState, useEffect } from "react";
-import Link from "next/link";
-import RadioPlayer from "@/components/radio-player";
+import ModernNavbar from "../../components/modern-navbar";
+import Footer from "../../components/footer";
+import RadioPlayer from "../../components/radio-player";
 
 // Program schedule data
 const programs = [

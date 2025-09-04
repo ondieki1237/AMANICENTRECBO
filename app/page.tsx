@@ -21,23 +21,20 @@ import {
   Calendar,
   Clock,
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Analytics } from "@vercel/analytics/next"
-import { Card, CardContent } from "@/components/ui/card";
-import Image from "next/image";
-import Link from "next/link";
-import ModernNavbar from "@/components/modern-navbar";
-import MediaHubPage from "@/components/mediahub";
-import RadioPlayer from "@/components/radio-player";
-import AnimatedCounter from "@/components/animated-counter";
-import SponsorsCarousel from "@/components/sponsors-carousel";
-import ContactSection from "@/components/ContactSection";
-import HeroSection from "@/components/herosection";
-import Footer from "@/components/footer";
-import AreasOfFocusPage from "@/components/areasoffocus";
-import Radioplayer from "@/components/radiosection";
+import { Button } from "../components/ui/button";
+import { Card, CardContent } from "../components/ui/card";
+import ModernNavbar from "../components/modern-navbar";
+import MediaHubPage from "../components/mediahub";
+import RadioPlayer from "../components/radio-player";
+import AnimatedCounter from "../components/animated-counter";
+import SponsorsCarousel from "../components/sponsors-carousel";
+import ContactSection from "../components/ContactSection";
+import HeroSection from "../components/herosection";
+import Footer from "../components/footer";
+import AreasOfFocusPage from "../components/areasoffocus";
+import Radioplayer from "../components/radiosection";
+import OurStoryPage from "../app/Story/page";
 import { motion, useReducedMotion } from "framer-motion";
-import OurStoryPage from "@/app/Story/page";
 
 interface Post {
   _id: number;

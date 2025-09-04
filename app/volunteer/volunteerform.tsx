@@ -1,6 +1,8 @@
 "use client";
 import React, { useState } from "react";
 import { X, Sparkles, ArrowRight } from "lucide-react";
+import { Button } from "../../components/ui/button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "../../components/ui/dialog";
 
 const VolunteerApplicationForm = ({ isOpen, onClose }) => {
   const [formData, setFormData] = useState({

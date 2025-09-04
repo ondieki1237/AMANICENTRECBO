@@ -1,14 +1,14 @@
 "use client";
 import { useState, useEffect } from "react";
-import ModernNavbar from "@/components/modern-navbar";
-import { Card, CardContent } from "@/components/ui/card";
+import ModernNavbar from "../../../components/modern-navbar";
+import { Card, CardContent } from "../../../components/ui/card";
+import Footer from "../../../components/footer";
+import { Button } from "../../../components/ui/button";
 import { Calendar, Clock, Tag, ArrowRight } from "lucide-react";
-import Footer from "@/components/footer";
 import Head from "next/head";
 import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { Button } from "@/components/ui/button";
 import Slider from "react-slick"; // Import react-slick
 import "slick-carousel/slick/slick.css"; // Import slick CSS
 import "slick-carousel/slick/slick-theme.css"; // Import slick theme CSS

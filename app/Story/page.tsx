@@ -1,6 +1,6 @@
 // pages/OurStory.js
-import ModernNavbar from "@/components/modern-navbar";
-import Footer from "@/components/footer";
+import ModernNavbar from "../../components/modern-navbar";
+import Footer from "../../components/footer";
 import TeamMember from "./TeamMember"; // Import the Client Component
 
 const OurStoryPage = () => {

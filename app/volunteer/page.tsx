@@ -1,12 +1,12 @@
 // pages/volunteer.jsx
 "use client";
 import React, { useState } from "react";
-import Navbar from "@/components/modern-navbar";
-import Footer from "@/components/footer";
+import Navbar from "../../components/modern-navbar";
+import Footer from "../../components/footer";
+import { Button } from "../../components/ui/button";
 import VolunteerApplicationForm from "./volunteerform";
 import PartnershipVolunteerForm from "./partnership";
 import { Users, Heart, Radio, Briefcase, ArrowRight, Sparkles, Handshake } from "lucide-react";
-import { Button } from "@/components/ui/button";
 
 const VolunteerPage = () => {
   const [isVolunteerModalOpen, setIsVolunteerModalOpen] = useState(false);

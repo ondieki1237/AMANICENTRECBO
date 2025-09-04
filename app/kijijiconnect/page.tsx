@@ -3,9 +3,9 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import ModernNavbar from "@/components/modern-navbar";
-import Footer from "@/components/footer";
-import kijijiImage from "@/public/images/kijiji.png";
+import ModernNavbar from "../../components/modern-navbar";
+import Footer from "../../components/footer";
+import kijijiImage from "../../../public/images/kijiji.png";
 
 const KijijiConnect = () => {
   // Fallback image for hero section

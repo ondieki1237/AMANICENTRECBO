@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
-import connectDB from '@/lib/mongodb';
-import User from '@/backend/models/User';
+import connectDB from "../../../../lib/mongodb";
+import User from "../../../../backend/models/User";
 
 export async function POST(req: Request) {
   try {
@@ -45,4 +45,4 @@ export async function POST(req: Request) {
       { status: 500 }
     );
   }
-} 
+}

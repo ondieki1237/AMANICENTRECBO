@@ -1,13 +1,10 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { ArrowRight, Calendar, Clock, Search } from "lucide-react";
-import Image from "next/image";
-import Link from "next/link";
-import ModernNavbar from "@/components/modern-navbar";
-import Footer from "@/components/footer";
-import { Input } from "@/components/ui/input";
+import { Card, CardContent } from "../../components/ui/card";
+import { Button } from "../../components/ui/button";
+import ModernNavbar from "../../components/modern-navbar";
+import Footer from "../../components/footer";
+import { Input } from "../../components/ui/input";
 import Head from "next/head";
 import { motion } from "framer-motion";
 

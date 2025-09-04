@@ -1,7 +1,7 @@
 "use client"
 import React, { useState } from 'react';
-import Navbar from '@/components/modern-navbar';
-import Footer from '@/components/footer';
+import Navbar from "../../components/modern-navbar";
+import Footer from "../../components/footer";
 import { CreditCard, ArrowRight } from 'lucide-react';
 
 const MakeADonationPage = () => {
