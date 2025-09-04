@@ -35,6 +35,7 @@ import AreasOfFocusPage from "../components/areasoffocus";
 import Radioplayer from "../components/radiosection";
 import OurStoryPage from "../app/Story/page";
 import { motion, useReducedMotion } from "framer-motion";
+import Link from "next/link";
 
 interface Post {
   _id: number;

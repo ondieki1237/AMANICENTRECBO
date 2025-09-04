@@ -1,9 +1,9 @@
 // pages/Volunteer.js
 import React, { useState } from 'react';
 import { ArrowRight } from 'lucide-react';
-import { Button } from "@/components/ui/button";
-import ModernNavbar from "@/components/modern-navbar";
-import Footer from "@/components/footer";
+import { Button } from "./ui/button";
+import ModernNavbar from "./modern-navbar";
+import Footer from "./footer";
 
 interface FormData {
   name: string;

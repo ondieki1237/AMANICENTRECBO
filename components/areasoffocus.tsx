@@ -1,10 +1,10 @@
 "use client";
 import React from "react";
 import { ArrowRight } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "./ui/button";
+import { Card, CardContent } from "./ui/card";
+import ModernNavbar from "./modern-navbar";
 import Image from "next/image";
-import ModernNavbar from "@/components/modern-navbar";
 
 export default function AreasOfFocusPage() {
   return (

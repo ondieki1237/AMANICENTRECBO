@@ -1,7 +1,7 @@
 "use client";
 
-import ModernNavbar from "@/components/modern-navbar";
-import Footer from "@/components/footer";
+import ModernNavbar from "./modern-navbar";
+import Footer from "./footer";
 import { Radio, Play, Pause, Volume2 } from "lucide-react"; // Removed Link from lucide-react
 import Link from "next/link"; // Added Next.js Link import
 import { useState, useRef, useEffect } from "react";
