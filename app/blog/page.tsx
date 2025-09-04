@@ -7,6 +7,8 @@ import Footer from "../../components/footer";
 import { Input } from "../../components/ui/input";
 import Head from "next/head";
 import { motion } from "framer-motion";
+import Link from "next/link";
+import { ArrowRight, Calendar, Clock, Search } from "lucide-react";
 
 interface Post {
   _id: number;
