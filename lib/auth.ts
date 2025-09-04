@@ -1,7 +1,7 @@
 import { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { connectDB } from "@/lib/mongodb";
-import { User } from "@/models/User";
+import User from "@/backend/models/User"; // Change to default import
 
 import bcrypt from "bcryptjs";
 
@@ -88,4 +88,4 @@ export const authOptions: NextAuthOptions = {
   },
   secret: process.env.NEXTAUTH_SECRET,
   debug: true, // Enable debug mode
-}; 
+};

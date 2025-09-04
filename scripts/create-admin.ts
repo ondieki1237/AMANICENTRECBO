@@ -1,5 +1,5 @@
 import { connectDB } from '../lib/mongodb';
-import { User } from '../models/User';
+import { User } from '../backend/models/User';
 import bcrypt from 'bcryptjs';
 
 async function createAdminUser() {

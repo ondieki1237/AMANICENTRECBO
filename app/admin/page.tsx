@@ -17,6 +17,7 @@ import StarterKit from "@tiptap/starter-kit";
 import Link from "@tiptap/extension-link";
 import Image from "@tiptap/extension-image";
 import { Session } from "next-auth";
+import dynamic from "next/dynamic";
 
 interface Post {
   _id: string;
