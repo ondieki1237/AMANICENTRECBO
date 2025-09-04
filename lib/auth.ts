@@ -1,7 +1,7 @@
 import { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { connectDB } from "@/lib/mongodb";
-import User from "@/backend/models/User"; // Change to default import
+import connectDB from "./mongodb";
+import User from "../backend/models/User";
 
 import bcrypt from "bcryptjs";
 
