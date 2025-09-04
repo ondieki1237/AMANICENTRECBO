@@ -31,7 +31,10 @@ const CONFIG = {
   },
   ALLOWED_ORIGINS: [
     'https://amanicentrecbo-client.onrender.com',
-    'http://localhost:3000'
+    'http://localhost:3000',
+    'https://amanicentrecbo-beta.vercel.app/',
+    'https://amanicentercbo.org',
+    'http://amanicentercbo.org'
   ],
   UPLOADS_DIR: path.join(__dirname, "uploads")
 };
