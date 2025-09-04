@@ -9,6 +9,8 @@ import Head from "next/head";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { ArrowRight, Calendar, Clock, Search } from "lucide-react";
+import Image from "next/image";
+
 
 interface Post {
   _id: number;
@@ -239,10 +241,6 @@ const BlogPage = () => {
                         sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
                         className="object-cover group-hover:scale-105 transition-transform duration-300"
                         priority={posts[0]?._id === post._id}
-                        onError={(e) => {
-                          console.error(`Failed to load image for post ${post.title}: ${post.image}`);
-                          (e.target as HTMLImageElement).src = "/images/placeholder.jpg";
-                        }}
                       />
                       <div className="absolute top-4 left-4">
                         <span className="bg-emerald-600 text-white px-3 py-1 rounded-full text-sm">
