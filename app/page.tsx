@@ -36,6 +36,7 @@ import Radioplayer from "../components/radiosection";
 import OurStoryPage from "../app/Story/page";
 import { motion, useReducedMotion } from "framer-motion";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 interface Post {
   _id: number;
@@ -55,6 +56,7 @@ export default function HomePage() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const shouldReduceMotion = useReducedMotion();
+  const router = useRouter();
 
   // Fetch posts
   useEffect(() => {
@@ -141,6 +143,13 @@ export default function HomePage() {
           },
         },
       };
+
+  const handleOurWorkClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    const el = document.getElementById("work");
+    if (el) el.scrollIntoView({ behavior: "smooth" });
+    setIsOpen(false); // For mobile menu
+  };
 
   return (
     <div className="min-h-screen bg-white font-body">

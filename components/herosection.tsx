@@ -2,7 +2,7 @@
 
 import React, { useState, useRef } from 'react';
 import Link from 'next/link';
-import { Button } from "./ui/button";
+import { Button } from './ui/button';
 import { motion, useReducedMotion } from 'framer-motion';
 
 const HeroSection = () => {
@@ -191,24 +191,47 @@ const HeroSection = () => {
           )}
         </div>
 
-        {/* Statistics Section - Integrated */}
+        {/* Statistics Section - Enhanced */}
         <motion.div
           className="w-full mt-6 md:mt-8"
           variants={statsVariants}
         >
-          <div className="grid grid-cols-3 gap-2 sm:gap-4">
-            <div className="bg-white/5 backdrop-blur-sm rounded-lg p-3 sm:p-4 text-center border border-white/10">
-              <p className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-1">500K+</p>
-              <p className="text-gray-300 text-xs sm:text-sm">Radio Listeners</p>
-            </div>
-            <div className="bg-white/5 backdrop-blur-sm rounded-lg p-3 sm:p-4 text-center border border-white/10">
-              <p className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-1">150+</p>
-              <p className="text-gray-300 text-xs sm:text-sm">Youths Trained</p>
-            </div>
-            <div className="bg-white/5 backdrop-blur-sm rounded-lg p-3 sm:p-4 text-center border border-white/10">
-              <p className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-1">15+</p>
-              <p className="text-gray-300 text-xs sm:text-sm">Partnerships</p>
-            </div>
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2 sm:gap-4 lg:gap-6">
+            <motion.div
+              className="bg-white/5 backdrop-blur-sm rounded-lg p-3 sm:p-4 lg:p-6 text-center border border-white/10 hover:bg-white/10 transition-colors duration-300"
+              whileHover={!shouldReduceMotion ? { scale: 1.05 } : {}}
+            >
+              <p className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-1">500K+</p>
+              <p className="text-gray-300 text-xs sm:text-sm lg:text-base">Radio Listeners</p>
+            </motion.div>
+            <motion.div
+              className="bg-white/5 backdrop-blur-sm rounded-lg p-3 sm:p-4 lg:p-6 text-center border border-white/10 hover:bg-white/10 transition-colors duration-300"
+              whileHover={!shouldReduceMotion ? { scale: 1.05 } : {}}
+            >
+              <p className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-1">150+</p>
+              <p className="text-gray-300 text-xs sm:text-sm lg:text-base">Youths Trained</p>
+            </motion.div>
+            <motion.div
+              className="bg-white/5 backdrop-blur-sm rounded-lg p-3 sm:p-4 lg:p-6 text-center border border-white/10 hover:bg-white/10 transition-colors duration-300"
+              whileHover={!shouldReduceMotion ? { scale: 1.05 } : {}}
+            >
+              <p className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-1">15+</p>
+              <p className="text-gray-300 text-xs sm:text-sm lg:text-base">Partnerships</p>
+            </motion.div>
+            <motion.div
+              className="bg-white/5 backdrop-blur-sm rounded-lg p-3 sm:p-4 lg:p-6 text-center border border-white/10 hover:bg-white/10 transition-colors duration-300"
+              whileHover={!shouldReduceMotion ? { scale: 1.05 } : {}}
+            >
+              <p className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-1">3</p>
+              <p className="text-gray-300 text-xs sm:text-sm lg:text-base">Tertiary Schools Connected</p>
+            </motion.div>
+            <motion.div
+              className="bg-white/5 backdrop-blur-sm rounded-lg p-3 sm:p-4 lg:p-6 text-center border border-white/10 hover:bg-white/10 transition-colors duration-300"
+              whileHover={!shouldReduceMotion ? { scale: 1.05 } : {}}
+            >
+              <p className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-1">2</p>
+              <p className="text-gray-300 text-xs sm:text-sm lg:text-base">Schools in STEM Projects</p>
+            </motion.div>
           </div>
         </motion.div>
       </motion.div>

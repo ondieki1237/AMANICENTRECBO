@@ -319,8 +319,6 @@ export default function RadioPage() {
         </div>
       </section>
 
-      {/* Footer */}
-      <Footer />
     </div>
   );
 }

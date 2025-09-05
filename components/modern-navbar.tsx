@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { Menu, X, Home } from "lucide-react";
 import { Button } from "./ui/button";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 export default function FloatingIslandNavbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -11,6 +11,7 @@ export default function FloatingIslandNavbar() {
   const [isVisible, setIsVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
   const pathname = usePathname();
+  const router = useRouter();
   const isBlogPage = pathname.includes("/blog");
 
   useEffect(() => {
@@ -42,6 +43,11 @@ export default function FloatingIslandNavbar() {
     };
   }, [isOpen]);
 
+  const handleOurWorkClick = () => {
+    // Add your custom logic here
+    console.log("Our Work clicked");
+  };
+
   return (
     <>
       <nav
@@ -68,17 +74,17 @@ export default function FloatingIslandNavbar() {
             {/* Desktop Navigation */}
             <div className="hidden lg:flex items-center space-x-2">
               <Link
-                href="#story"
+                href="/Story"
                 className="nav-link px-3 py-2 font-medium text-sm text-white hover:text-white hover:scale-105 transition-all duration-200"
               >
                 Our Story
               </Link>
-              <Link
-                href="#work"
+              <button
+                onClick={handleOurWorkClick}
                 className="nav-link px-3 py-2 font-medium text-sm text-white hover:text-white hover:scale-105 transition-all duration-200"
               >
                 Our Work
-              </Link>
+              </button>
               <Link
                 href="/amanimashinani"
                 className="nav-link px-3 py-2 font-medium text-sm text-white hover:text-white hover:scale-105 transition-all duration-200"
@@ -137,19 +143,26 @@ export default function FloatingIslandNavbar() {
       >
         <div className="h-full px-4 pt-16 pb-6 space-y-2 bg-gradient-to-r from-red-600/30 to-red-700/30 backdrop-blur-lg shadow-lg border-r border-red-500/20">
           <Link
-            href="#story"
+            href="/Story"
             className="block px-3 py-2 font-medium text-sm text-white hover:text-white hover:bg-red-500/20 rounded-lg transition-all duration-200"
             onClick={() => setIsOpen(false)}
           >
             Our Story
           </Link>
-          <Link
-            href="#work"
+          <button
+            onClick={() => {
+              setIsOpen(false);
+              if (pathname === "/") {
+                const el = document.getElementById("work");
+                if (el) el.scrollIntoView({ behavior: "smooth" });
+              } else {
+                router.push("/#work");
+              }
+            }}
             className="block px-3 py-2 font-medium text-sm text-white hover:text-white hover:bg-red-500/20 rounded-lg transition-all duration-200"
-            onClick={() => setIsOpen(false)}
           >
             Our Work
-          </Link>
+          </button>
           <Link
             href="/amanimashinani"
             className="block px-3 py-2 font-medium text-sm text-white hover:text-white hover:bg-red-500/20 rounded-lg transition-all duration-200"
@@ -184,6 +197,7 @@ export default function FloatingIslandNavbar() {
         </div>
       </div>
 
+      {/* Overlay */}
       {isOpen && (
         <div
           className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40 lg:hidden transition-opacity duration-300"
