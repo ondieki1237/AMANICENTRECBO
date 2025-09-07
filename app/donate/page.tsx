@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import Navbar from "../../components/modern-navbar";
 import Footer from "../../components/footer";
-import { CreditCard, ArrowRight } from 'lucide-react';
+import { CreditCard, ArrowRight, Smartphone, Building } from 'lucide-react';
 
 const MakeADonationPage = () => {
   const [donationAmount, setDonationAmount] = useState(50);
@@ -53,7 +53,7 @@ const MakeADonationPage = () => {
             </div>
 
             <div className="grid md:grid-cols-3 gap-6 mb-8">
-              {/* One-Time Donation */}
+              {/* One-Time Donation with PayPal */}
               <div className="bg-gray-800 rounded-xl p-6 text-center transition-all hover:shadow-lg">
                 <h3 className="text-xl font-semibold text-emerald-400 mb-2">One-Time Donation</h3>
                 <p className="text-gray-300 mb-4">Make a single contribution of any amount</p>
@@ -81,7 +81,7 @@ const MakeADonationPage = () => {
                     placeholder="Custom amount"
                   />
                 </div>
-                <div className="flex justify-center gap-4">
+                <div className="flex justify-center gap-4 flex-wrap">
                   <button className="bg-emerald-500 hover:bg-emerald-600 text-white px-6 py-3 rounded-lg transition-colors flex items-center gap-2">
                     Donate Now
                     <ArrowRight className="h-4 w-4" />
@@ -101,29 +101,35 @@ const MakeADonationPage = () => {
                 </div>
               </div>
 
-              {/* Monthly Support */}
+              {/* Bank Transfer */}
               <div className="bg-gray-800 rounded-xl p-6 text-center transition-all hover:shadow-lg">
-                <h3 className="text-xl font-semibold text-emerald-400 mb-2">Monthly Support</h3>
-                <p className="text-gray-300 mb-4">Set up recurring monthly donations</p>
-                <button className="bg-emerald-500 hover:bg-emerald-600 text-white px-6 py-3 rounded-lg transition-colors flex items-center justify-center gap-2 mx-auto">
-                  Subscribe
-                  <ArrowRight className="h-4 w-4" />
-                </button>
+                <Building className="h-8 w-8 text-emerald-400 mx-auto mb-4" />
+                <h3 className="text-xl font-semibold text-emerald-400 mb-2">Bank Transfer</h3>
+                <p className="text-gray-300 mb-4">Send your donation directly via bank transfer:</p>
+                <ul className="text-sm text-gray-300 text-left space-y-1">
+                  <li><strong>Bank:</strong> Equity Bank Limited</li>
+                  <li><strong>Branch:</strong> Malindi</li>
+                  <li><strong>Account Name:</strong> Amani Center</li>
+                  <li><strong>Account No:</strong> 0450284519543</li>
+                  <li><strong>SWIFT Code:</strong> EQBLKENA</li>
+                  <li><strong>Currency:</strong> USD</li>
+                </ul>
               </div>
 
-              {/* Corporate Giving */}
+              {/* M-Pesa Paybill */}
               <div className="bg-gray-800 rounded-xl p-6 text-center transition-all hover:shadow-lg">
-                <h3 className="text-xl font-semibold text-emerald-400 mb-2">Corporate Giving</h3>
-                <p className="text-gray-300 mb-4">Partner with us for larger impact</p>
-                <button className="bg-emerald-500 hover:bg-emerald-600 text-white px-6 py-3 rounded-lg transition-colors flex items-center justify-center gap-2 mx-auto">
-                  Learn More
-                  <ArrowRight className="h-4 w-4" />
-                </button>
+                <Smartphone className="h-8 w-8 text-emerald-400 mx-auto mb-4" />
+                <h3 className="text-xl font-semibold text-emerald-400 mb-2">M-Pesa (Kenya)</h3>
+                <p className="text-gray-300 mb-4">Donate easily via M-Pesa Paybill:</p>
+                <ul className="text-sm text-gray-300 text-left space-y-1">
+                  <li><strong>Paybill:</strong> 913716</li>
+                  <li><strong>Account Name:</strong> Amani Center</li>
+                </ul>
               </div>
             </div>
 
             <p className="text-gray-300 text-center text-sm">
-              All donations are tax-deductible and will be acknowledged with a receipt.
+              All donations are deeply appreciated and help us sustain our mission 🙏
             </p>
           </div>
         </div>

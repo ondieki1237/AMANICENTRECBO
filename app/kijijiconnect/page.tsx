@@ -48,23 +48,29 @@ const KijijiConnect = () => {
       {/* Main Content */}
       <main className="container mx-auto px-4 sm:px-6 lg:px-8 pt-16 py-12 sm:py-16">
         {/* Hero Section */}
-        <section className="relative w-full h-[60vh] flex items-center justify-center">
+        <section className="relative w-full h-[60vh] flex items-center justify-center overflow-hidden rounded-2xl shadow-lg mb-12">
           <Image
             src="/images/kijiji.png"
             alt="Kijiji Connect ICT Hub in Tana River"
             fill
-            className="object-cover"
+            className="object-cover object-center brightness-90 transition-all duration-500"
             priority
-            onError={(e) => console.error(`Failed to load hero image: ${kijijiImage}`, e)}
+            style={{ zIndex: 1 }}
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-black/50 to-transparent" />
-          <div className="relative z-10 text-center text-white">
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold drop-shadow-lg font-canela">
+          {/* Gradient overlay for better text contrast */}
+          <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/30 to-transparent z-10" />
+          {/* Decorative overlay for extra polish */}
+          <div className="absolute inset-0 bg-gradient-to-r from-black/30 via-transparent to-black/30 z-10" />
+          <div className="relative z-20 text-center text-white flex flex-col items-center justify-center w-full px-4">
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold drop-shadow-2xl font-canela mb-4">
               Kijiji Connect: Empowering Tana River
             </h1>
+            <p className="max-w-2xl mx-auto text-lg sm:text-xl font-medium mb-6 drop-shadow-lg">
+              Bridging the digital divide in Tana River through skills, connectivity, and opportunity.
+            </p>
             <Link
               href="/volunteer"
-              className="mt-6 inline-block bg-[hsl(var(--destructive))] text-white py-3 px-6 rounded-lg hover:bg-[hsl(var(--destructive)/0.8)] transition"
+              className="mt-2 inline-block bg-[hsl(var(--destructive))] text-white py-3 px-8 rounded-full font-semibold text-lg shadow-lg hover:bg-[hsl(var(--destructive)/0.8)] transition"
               aria-label="Support Kijiji Connect"
             >
               Support Us
