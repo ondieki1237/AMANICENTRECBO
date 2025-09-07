@@ -312,7 +312,7 @@ const handleDelete = async (id: string) => {
     if (!session?.accessToken) {
       throw new Error("Authentication token is missing. Please sign in again.");
     }
-    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/news?id=${id}`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/news/${id}`, {
       method: "DELETE",
       headers: { Authorization: `Bearer ${session.accessToken}` },
     });
@@ -452,6 +452,11 @@ const handleDelete = async (id: string) => {
                         <SelectItem value="Education">Education</SelectItem>
                         <SelectItem value="Environment">Environment</SelectItem>
                         <SelectItem value="Partnerships">Partnerships</SelectItem>
+                        <SelectItem value="Sports">Sports</SelectItem>
+                        <SelectItem value="Politics">Politics</SelectItem>
+                        <SelectItem value="Health">Health</SelectItem>
+                        <SelectItem value="Weather">Weather</SelectItem>
+                        <SelectItem value="Other">Other</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
