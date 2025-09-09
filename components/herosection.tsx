@@ -110,8 +110,25 @@ const HeroSection = () => {
 
   return (
     <section
-      className="relative w-full min-h-[90vh] py-8 px-4 sm:px-6 md:px-10 md:pt-16 lg:px-16 xl:px-20 flex flex-col justify-center overflow-hidden bg-black bg-cover bg-center bg-[url('/images/phonebackground.png')] md:bg-[url('/images/backfull.png')]"
+      data-herobg
+      className="relative w-full min-h-[90vh] py-8 px-4 sm:px-6 md:px-10 md:pt-16 lg:px-16 xl:px-20 flex flex-col justify-center overflow-hidden bg-black bg-cover bg-center"
+      style={{
+        backgroundImage: `url('https://res.cloudinary.com/dn6yc8dj0/image/upload/v1757422438/phonebackground_piasvi.png')`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+      }}
     >
+      {/* Responsive background override for desktop */}
+      <style>
+        {`
+          @media (min-width: 1024px) {
+            section[data-herobg] {
+              background-image: url('https://res.cloudinary.com/dn6yc8dj0/image/upload/v1757422435/backfull_w7xat4.png') !important;
+            }
+          }
+        `}
+      </style>
+
       {/* Audio Element (Hidden) */}
       <audio
         ref={audioRef}
