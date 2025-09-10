@@ -157,14 +157,19 @@ export default function HomePage() {
       {/* Hero Section */}
       <HeroSection />
 
-{/* Who We Are Section */}
-<section id="story" className="py-24 bg-white">
+      {/* Areas of Focus */}
+      <AreasOfFocusPage />
+
+      {/* Who We Are Section with Neumorphism */}
+<section id="story" className="py-24 bg-gray-100">
   <div className="max-w-screen-xl mx-auto px-2 sm:px-4 lg:px-6">
     <div className="grid lg:grid-cols-2 gap-16 items-center">
       <div>
-        <div className="inline-block bg-emerald-100 px-6 py-3 rounded-full mb-6">
+        {/* Neumorphic Tag */}
+        <div className="inline-block px-6 py-3 rounded-full mb-6 bg-gray-100 shadow-[8px_8px_16px_#d1d5db,-8px_-8px_16px_#ffffff]">
           <p className="text-emerald-600 font-semibold text-sm tracking-wide uppercase">Who We Are</p>
         </div>
+
         <h2 className="font-display text-4xl md:text-5xl text-gray-900 mb-8">Who We Are</h2>
         <div className="w-24 h-1 bg-emerald-600 mb-8 rounded-full"></div>
 
@@ -176,7 +181,8 @@ export default function HomePage() {
             projects for rural communities in the Tana region.
           </p>
 
-          <div className="bg-gradient-to-r from-emerald-50 to-red-50 p-8 rounded-2xl">
+          {/* Neumorphic Mission Card */}
+          <div className="p-8 rounded-2xl bg-gray-100 shadow-[8px_8px_16px_#d1d5db,-8px_-8px_16px_#ffffff] hover:shadow-[inset_8px_8px_16px_#d1d5db,inset_-8px_-8px_16px_#ffffff] transition">
             <h3 className="font-display text-2xl text-gray-900 mb-4">Our Mission</h3>
             <p className="text-gray-700 text-lg leading-relaxed">
               To bridge communities through innovative media and ICT solutions, creating pathways for economic
@@ -184,29 +190,32 @@ export default function HomePage() {
             </p>
           </div>
 
-          {/* Added button with link to full story */}
-        <Link 
-          href="/Story" 
-          className="inline-block mt-6 px-8 py-3 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-full transition duration-300 shadow-lg hover:shadow-emerald-200"
-        >
-          Get the full story
-        </Link>
+          {/* Neumorphic Button */}
+          <Link 
+            href="/Story" 
+            className="inline-block mt-6 px-8 py-3 text-emerald-700 font-semibold rounded-full transition duration-300 
+                       bg-gray-100 shadow-[6px_6px_12px_#d1d5db,-6px_-6px_12px_#ffffff] 
+                       hover:shadow-[inset_6px_6px_12px_#d1d5db,inset_-6px_-6px_12px_#ffffff]"
+          >
+            Get the full story
+          </Link>
         </div>
       </div>
 
-      <div>
-        <img
-          src="/images/image1.png"
-          alt="Community impact in Tana River"
-          className="w-full max-w-lg mx-auto rounded-xl object-cover"
-        />
+      {/* Neumorphic Image Container */}
+      <div className="flex justify-center">
+        <div className="p-4 rounded-2xl bg-gray-100 shadow-[12px_12px_24px_#d1d5db,-12px_-12px_24px_#ffffff]">
+          <img
+            src="/images/image1.png"
+            alt="Community impact in Tana River"
+            className="w-full max-w-lg rounded-xl object-cover"
+          />
+        </div>
       </div>
     </div>
   </div>
 </section>
 
-      {/* Areas of Focus */}
-      <AreasOfFocusPage />
 
       {/* Our Approach Section */}
       <section id="approach" className="py-24 bg-gradient-to-br from-red-600 to-red-700 text-white">
