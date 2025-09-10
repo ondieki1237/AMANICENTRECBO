@@ -528,4 +528,9 @@ const startServer = async () => {
   }
 };
 
+// Add this just before startServer() is called, after all other routes are set up
+app.get('/api/health', (req, res) => {
+  res.status(200).json({ status: 'ok', message: 'Amani Centre API is healthy' });
+});
+
 startServer();
