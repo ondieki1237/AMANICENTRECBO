@@ -36,6 +36,7 @@ const CONFIG = {
   'https://amanicentercbo.org',
   'http://amanicentercbo.org',
   'https://www.amanicentercbo.org',
+  'https://backendmanager.vercel.app/',
   'https://amanicentrecbo-jmp7hkkz1-sethmose31-9319s-projects.vercel.app'
   ],
   UPLOADS_DIR: path.join(__dirname, "uploads")
