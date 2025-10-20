@@ -4,7 +4,7 @@ The Amani Centre website is the digital hub for a community-based organization d
 
 Developed with Next.js 15.2.4, the site features a modern, responsive design powered by Tailwind CSS and Radix UI, ensuring accessibility and a seamless user experience.
 
----
+--
 
 ## Table of Contents
 
