@@ -35,20 +35,30 @@ const Footer = () => {
             <div className="text-left space-y-6">
               <h4 className="font-display text-xl text-white mb-6">Quick Links</h4>
               <div className="space-y-3">
-                <Link href="#story" passHref legacyBehavior>
-                  <a className="block text-gray-400 hover:text-emerald-400 transition-colors">Our Story</a>
+                <Link
+                  href="#story"
+                  className="block text-gray-400 hover:text-emerald-400 transition-colors">
+                  Our Story
                 </Link>
-                <Link href="#work" passHref legacyBehavior>
-                  <a className="block text-gray-400 hover:text-emerald-400 transition-colors">Our Work</a>
+                <Link
+                  href="#work"
+                  className="block text-gray-400 hover:text-emerald-400 transition-colors">
+                  Our Work
                 </Link>
-                <Link href="#approach" passHref legacyBehavior>
-                  <a className="block text-gray-400 hover:text-emerald-400 transition-colors">Our Approach</a>
+                <Link
+                  href="#approach"
+                  className="block text-gray-400 hover:text-emerald-400 transition-colors">
+                  Our Approach
                 </Link>
-                <Link href="#involved" passHref legacyBehavior>
-                  <a className="block text-gray-400 hover:text-emerald-400 transition-colors">Get Involved</a>
+                <Link
+                  href="#involved"
+                  className="block text-gray-400 hover:text-emerald-400 transition-colors">
+                  Get Involved
                 </Link>
-                <Link href="#contact" passHref legacyBehavior>
-                  <a className="block text-gray-400 hover:text-emerald-400 transition-colors">Contact Us</a>
+                <Link
+                  href="#contact"
+                  className="block text-gray-400 hover:text-emerald-400 transition-colors">
+                  Contact Us
                 </Link>
               </div>
             </div>

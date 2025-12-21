@@ -49,7 +49,6 @@ export default function AreasOfFocusPage() {
     <div className="min-h-fit bg-[#F5F6F5] font-body">
       {/* Navigation Bar */}
       <ModernNavbar />
-
       {/* Areas of Focus Section */}
       <section id="work" className="py-8 sm:py-12 bg-[#F5F6F5]">
         <div className="w-full px-2 sm:px-4">
@@ -127,7 +126,9 @@ export default function AreasOfFocusPage() {
                     <p className="text-sm sm:text-base text-[#6B7280] leading-relaxed mb-4 flex-1">
                       {item.desc}
                     </p>
-                    <Link href={item.link} passHref legacyBehavior>
+                    <Link href={item.link}>
+                      {/* @next-codemod-error This Link previously used the now removed `legacyBehavior` prop, and has a child that might not be an anchor. The codemod bailed out of lifting the child props to the Link. Check that the child component does not render an anchor, and potentially move the props manually to Link. */
+                      }
                       <Button
                         variant="outline"
                         className="

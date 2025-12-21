@@ -34,7 +34,6 @@ const AmaniMashinani = () => {
   return (
     <div className="relative min-h-screen bg-white">
       <Navbar />
-
       <main className="container mx-auto px-4 py-8">
         {/* Hero Section */}
         <motion.section
@@ -158,7 +157,9 @@ const AmaniMashinani = () => {
                   </div>
                   <h3 className="text-xl font-bold text-gray-900 mb-3">{item.title}</h3>
                   <p className="text-gray-600 mb-4 flex-1">{item.desc}</p>
-                  <Link href={item.link || "#"} passHref legacyBehavior>
+                  <Link href={item.link || "#"}>
+                    {/* @next-codemod-error This Link previously used the now removed `legacyBehavior` prop, and has a child that might not be an anchor. The codemod bailed out of lifting the child props to the Link. Check that the child component does not render an anchor, and potentially move the props manually to Link. */
+                    }
                     <Button className="bg-red-600 hover:bg-red-700 text-white text-sm px-4 py-2 mt-auto w-fit">
                       Learn More
                     </Button>
@@ -228,7 +229,9 @@ const AmaniMashinani = () => {
                   <p className="text-gray-600 mb-4 flex-1 text-sm sm:text-base">
                     {item.desc}
                   </p>
-                  <Link href={item.link || "#"} passHref legacyBehavior>
+                  <Link href={item.link || "#"}>
+                    {/* @next-codemod-error This Link previously used the now removed `legacyBehavior` prop, and has a child that might not be an anchor. The codemod bailed out of lifting the child props to the Link. Check that the child component does not render an anchor, and potentially move the props manually to Link. */
+                    }
                     <Button className="bg-green-600 hover:bg-green-700 text-white text-xs sm:text-sm px-3 sm:px-4 py-2 mt-auto w-fit">
                       Learn More
                     </Button>
@@ -289,7 +292,9 @@ const AmaniMashinani = () => {
                   </div>
                   <h3 className="text-xl font-bold text-gray-900 mb-3">{item.title}</h3>
                   <p className="text-gray-600 mb-4 flex-1">{item.desc}</p>
-                  <Link href={item.link || "#"} passHref legacyBehavior>
+                  <Link href={item.link || "#"}>
+                    {/* @next-codemod-error This Link previously used the now removed `legacyBehavior` prop, and has a child that might not be an anchor. The codemod bailed out of lifting the child props to the Link. Check that the child component does not render an anchor, and potentially move the props manually to Link. */
+                    }
                     <Button className="bg-black hover:bg-gray-800 text-white text-sm px-4 py-2 mt-auto w-fit">
                       Learn More
                     </Button>
@@ -337,7 +342,6 @@ const AmaniMashinani = () => {
           </div>
         </motion.section>
       </main>
-
       <Footer />
     </div>
   );
