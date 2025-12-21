@@ -43,9 +43,6 @@
     "@tiptap/extension-link": "^2.14.0",
     "@tiptap/react": "^2.14.0",
     "@tiptap/starter-kit": "^2.14.0",
-    "@types/node": "^22.18.0",
-    "@types/react": "^18.3.12",
-    "@types/react-dom": "^18.3.1",
     "@vercel/analytics": "^1.5.0",
     "autoprefixer": "^10.4.20",
     "aws4": "^1.13.2",
@@ -78,12 +75,15 @@
     "sonner": "^1.7.1",
     "tailwind-merge": "^2.5.5",
     "tailwindcss-animate": "^1.0.7",
-    "typescript": "^5.9.2",
     "vaul": "^0.9.6",
     "zod": "^3.24.1"
   },
   "devDependencies": {
+    "@types/node": "^22.18.0",
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
     "postcss": "^8.5",
-    "tailwindcss": "^3.4.17"
+    "tailwindcss": "^3.4.17",
+    "typescript": "^5.9.2"
   }
 }
