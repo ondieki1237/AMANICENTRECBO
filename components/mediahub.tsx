@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import Head from 'next/head';
 import Image from 'next/image';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
@@ -109,10 +108,6 @@ const MediaHubPage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Head>
-        <title>Media Hub | Amani Centre</title>
-        <meta name="description" content="Explore our blog posts and stories from Amani Centre" />
-      </Head>
 
       {/* Banner Section */}
       <section className="bg-[#1A1A1A] text-white py-16 text-center">

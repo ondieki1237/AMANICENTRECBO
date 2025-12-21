@@ -5,7 +5,6 @@ import { Button } from "../../components/ui/button";
 import ModernNavbar from "../../components/modern-navbar";
 import Footer from "../../components/footer";
 import { Input } from "../../components/ui/input";
-import Head from "next/head";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { ArrowRight, Calendar, Clock, Search } from "lucide-react";
@@ -95,22 +94,6 @@ const BlogPage = () => {
 
   return (
     <>
-      <Head>
-        <title>Latest News & Updates | Tana River County</title>
-        <meta name="description" content="Stay informed with the latest news from Tana River County." />
-        <meta name="keywords" content="Tana River, news, community, education, environment, partnerships" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta property="og:title" content="Latest News & Updates | Tana River County" />
-        <meta
-          property="og:description"
-          content="Discover the latest initiatives, community impact, and events in Tana River County."
-        />
-        <meta property="og:image" content="/images/og-image.jpg" />
-        <meta property="og:url" content="https://yourwebsite.com/blog" />
-        <meta name="twitter:card" content="summary_large_image" />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-
       <div className="min-h-screen bg-gray-50">
         <ModernNavbar />
         <section className="relative py-12 sm:py-16 bg-gradient-to-r from-emerald-600 to-red-600 text-white overflow-hidden">

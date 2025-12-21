@@ -134,7 +134,7 @@ const Footer = () => {
                   className="rounded-full bg-white p-1"
                 />
                 <a
-                  href="https://ondieki1237.github.io/sethbellarin"
+                  href="https://codewithseth.co.ke"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-sm font-medium"

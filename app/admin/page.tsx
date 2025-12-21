@@ -19,7 +19,6 @@ import Link from "@tiptap/extension-link";
 import Image from "@tiptap/extension-image";
 import { Session } from "next-auth";
 import dynamic from "next/dynamic";
-import Head from "next/head";
 
 interface Post {
   _id: string;
@@ -367,11 +366,6 @@ const handleDelete = async (id: string) => {
 
   return (
     <ErrorBoundary>
-      <Head>
-        <title>Admin Dashboard | Tana River County News</title>
-        <meta name="description" content="Manage news posts for Tana River County." />
-        <meta name="robots" content="noindex" />
-      </Head>
       <div className="min-h-screen bg-gray-50">
         <ModernNavbar />
         <section className="bg-gradient-to-r from-emerald-600 to-red-600 text-white py-16">

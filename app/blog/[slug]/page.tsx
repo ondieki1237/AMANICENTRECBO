@@ -5,7 +5,6 @@ import { Card, CardContent } from "../../../components/ui/card";
 import Footer from "../../../components/footer";
 import { Button } from "../../../components/ui/button";
 import { Calendar, Clock, Tag, ArrowRight } from "lucide-react";
-import Head from "next/head";
 import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
@@ -161,19 +160,6 @@ export default function BlogPost({ params }: { params: { slug: string } }) {
 
   return (
     <>
-      <Head>
-        <title>{post.title} | Tana River County News</title>
-        <meta name="description" content={post.excerpt} />
-        <meta name="keywords" content={post.tags.join(", ")} />
-        <meta name="robots" content="index, follow" />
-        <meta property="og:title" content={post.title} />
-        <meta property="og:description" content={post.excerpt} />
-        <meta property="og:image" content={post.image || "/images/og-image.jpg"} />
-        <meta property="og:url" content={`https://yourwebsite.com/blog/${post.slug}`} />
-        <meta name="twitter:card" content="summary_large_image" />
-        <link rel="canonical" href={`https://yourwebsite.com/blog/${post.slug}`} />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
       <div className="min-h-screen bg-white">
         <ModernNavbar />
         <main className="pt-20 pb-16">

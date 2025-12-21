@@ -21,7 +21,7 @@ dotenv.config();
 
 // Configuration Constants
 const CONFIG = {
-  PORT: process.env.PORT || 5000,
+  PORT: process.env.PORT || 5013,
   MONGODB_URI: process.env.MONGODB_URI,
   JWT_SECRET: process.env.JWT_SECRET,
   EMAIL_CONFIG: {
@@ -84,15 +84,9 @@ const setupModels = () => {
 const setupMiddleware = () => {
   // CORS Configuration
   app.use(cors({
-    origin: (origin, callback) => {
-      if (!origin || CONFIG.ALLOWED_ORIGINS.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error('Not allowed by CORS'));
-      }
-    },
+    origin: '*',
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    credentials: true
+    credentials: false
   }));
 
   app.use(express.json());
@@ -119,7 +113,9 @@ const authMiddleware = {
 // Email Service
 const emailService = {
   transporter: nodemailer.createTransport({
-    service: 'gmail',
+    host: process.env.EMAIL_HOST || 'smtp-relay.brevo.com',
+    port: parseInt(process.env.EMAIL_PORT || '587'),
+    secure: false,
     auth: {
       user: CONFIG.EMAIL_CONFIG.user,
       pass: CONFIG.EMAIL_CONFIG.pass
@@ -532,6 +528,38 @@ const startServer = async () => {
 // Add this just before startServer() is called, after all other routes are set up
 app.get('/api/health', (req, res) => {
   res.status(200).json({ status: 'ok', message: 'Amani Centre API is healthy' });
+});
+
+// Admin user creation endpoint (remove after first use)
+app.post('/api/create-admin', async (req, res) => {
+  try {
+    const { User } = setupModels();
+    const email = process.env.ADMIN_EMAIL || 'bellarinseth@gmail.com';
+    const password = process.env.ADMIN_PASSWORD || 'admin123';
+    
+    // Check if admin already exists
+    const existingUser = await User.findOne({ email: email.toLowerCase() });
+    if (existingUser) {
+      return res.status(200).json({ message: 'Admin user already exists', email });
+    }
+    
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const user = new User({ 
+      username: 'admin',
+      email: email.toLowerCase(), 
+      password: hashedPassword,
+      role: 'admin'
+    });
+    
+    await user.save();
+    res.status(201).json({ 
+      message: 'Admin user created successfully',
+      email: user.email,
+      username: user.username
+    });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to create admin user', details: error.message });
+  }
 });
 
 startServer();

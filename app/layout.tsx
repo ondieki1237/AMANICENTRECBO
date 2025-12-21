@@ -3,7 +3,7 @@ import type { Metadata } from "next"
 import localFont from "next/font/local"
 import "./globals.css"
 import SessionWrapper from "./providers/session-provider"
-import Head from "next/head";
+import Script from "next/script";
 
 const glacialIndifference = localFont({
   src: [
@@ -37,20 +37,14 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={glacialIndifference.variable}>
-      <Head>
-        {/* Google Analytics */}
-        <script async src="https://www.googletagmanager.com/gtag/js?id=G-DMYH545021"></script>
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              window.dataLayer = window.dataLayer || [];
-              function gtag(){dataLayer.push(arguments);}
-              gtag('js', new Date());
-              gtag('config', 'G-DMYH545021');
-            `,
-          }}
-        />
-      </Head>
+      {/* Google Analytics scripts — use next/script which is compatible with the App Router */}
+      <Script
+        src="https://www.googletagmanager.com/gtag/js?id=G-DMYH545021"
+        strategy="afterInteractive"
+      />
+      <Script id="gtag-init" strategy="afterInteractive">
+        {`window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', 'G-DMYH545021');`}
+      </Script>
       <body className={glacialIndifference.className}>
         <SessionWrapper>
           {children}
