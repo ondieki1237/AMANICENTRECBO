@@ -533,7 +533,13 @@ app.get('/api/health', (req, res) => {
 // Admin user creation endpoint (remove after first use)
 app.post('/api/create-admin', async (req, res) => {
   try {
-    const { User } = setupModels();
+    const User = mongoose.models.User || mongoose.model("User", new mongoose.Schema({
+      username: { type: String, required: true, unique: true },
+      email: { type: String, required: true, unique: true, lowercase: true },
+      password: { type: String, required: true },
+      role: { type: String, enum: ['user', 'admin'], default: 'admin' }
+    }, { timestamps: true }));
+    
     const email = process.env.ADMIN_EMAIL || 'bellarinseth@gmail.com';
     const password = process.env.ADMIN_PASSWORD || 'admin123';
     
