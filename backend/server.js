@@ -128,7 +128,8 @@ const emailService = {
       console.log('Email transporter is ready');
     } catch (error) {
       console.error('Email transporter verification failed:', error);
-      process.exit(1);
+      console.warn('Server will continue without email functionality');
+      // Don't exit - allow server to run without email
     }
   },
 
