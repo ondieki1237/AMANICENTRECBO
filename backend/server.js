@@ -44,14 +44,20 @@ const CONFIG = {
   UPLOADS_DIR: path.join(__dirname, "uploads")
 };
 
-// Validate required environment variables
+// Validate environment variables (warn instead of exit for some)
 const validateEnv = () => {
-  const requiredVars = ['MONGODB_URI', 'JWT_SECRET', 'EMAIL_USER', 'EMAIL_PASS'];
-  const missingVars = requiredVars.filter(v => !process.env[v]);
+  const essentialVars = ['MONGODB_URI', 'JWT_SECRET'];
+  const recommendedVars = ['EMAIL_USER', 'EMAIL_PASS'];
 
-  if (missingVars.length > 0) {
-    console.error(`Missing required environment variables: ${missingVars.join(', ')}`);
-    process.exit(1);
+  const missingEssential = essentialVars.filter(v => !process.env[v]);
+  const missingRecommended = recommendedVars.filter(v => !process.env[v]);
+
+  if (missingEssential.length > 0) {
+    console.error(`CRITICAL: Missing essential environment variables: ${missingEssential.join(', ')}`);
+    // Still don't exit! Let Render bind the port so we can see error logs via /api/health
+  }
+  if (missingRecommended.length > 0) {
+    console.warn(`WARNING: Missing recommended environment variables: ${missingRecommended.join(', ')}`);
   }
 };
 
@@ -489,8 +495,14 @@ const setupRoutes = (controllers) => {
 
 // Server Initialization
 const startServer = async () => {
+  // Start listening immediately so Render is happy
+  const server = app.listen(CONFIG.PORT, () => {
+    console.log(`Server running on port ${CONFIG.PORT}`);
+  });
+
   try {
-    // Connect to MongoDB
+    // Connect to MongoDB in the background
+    console.log("Connecting to MongoDB...");
     await mongoose.connect(CONFIG.MONGODB_URI, {
       maxPoolSize: 10
     });
@@ -498,17 +510,6 @@ const startServer = async () => {
 
     // Verify email connection
     await emailService.verifyConnection();
-
-    // Setup models, middleware, controllers and routes
-    const models = setupModels();
-    setupMiddleware();
-    const controllers = createControllers(models);
-    setupRoutes(controllers);
-
-    // Start server
-    const server = app.listen(CONFIG.PORT, () => {
-      console.log(`Server running on port ${CONFIG.PORT}`);
-    });
 
     // Graceful shutdown
     const shutdown = async () => {
@@ -522,62 +523,10 @@ const startServer = async () => {
 
     process.on('SIGINT', shutdown);
     process.on('SIGTERM', shutdown);
-    process.on('uncaughtException', (err) => {
-      console.error('Uncaught Exception:', err);
-      shutdown();
-    });
-    process.on('unhandledRejection', (reason, promise) => {
-      console.error('Unhandled Rejection at:', promise, 'reason:', reason);
-      shutdown();
-    });
-
   } catch (error) {
-    console.error('Server initialization failed:', error);
-    process.exit(1);
+    console.error('Initial background connection failed:', error.message);
+    // Let the server keep running, it will try to reconnect or just serve 5xx for data routes
   }
 };
-
-// Add this just before startServer() is called, after all other routes are set up
-app.get('/api/health', (req, res) => {
-  res.status(200).json({ status: 'ok', message: 'Amani Centre API is healthy' });
-});
-
-// Admin user creation endpoint (remove after first use)
-app.post('/api/create-admin', async (req, res) => {
-  try {
-    const User = mongoose.models.User || mongoose.model("User", new mongoose.Schema({
-      username: { type: String, required: true, unique: true },
-      email: { type: String, required: true, unique: true, lowercase: true },
-      password: { type: String, required: true },
-      role: { type: String, enum: ['user', 'admin'], default: 'admin' }
-    }, { timestamps: true }));
-
-    const email = process.env.ADMIN_EMAIL || 'bellarinseth@gmail.com';
-    const password = process.env.ADMIN_PASSWORD || 'admin123';
-
-    // Check if admin already exists
-    const existingUser = await User.findOne({ email: email.toLowerCase() });
-    if (existingUser) {
-      return res.status(200).json({ message: 'Admin user already exists', email });
-    }
-
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const user = new User({
-      username: 'admin',
-      email: email.toLowerCase(),
-      password: hashedPassword,
-      role: 'admin'
-    });
-
-    await user.save();
-    res.status(201).json({
-      message: 'Admin user created successfully',
-      email: user.email,
-      username: user.username
-    });
-  } catch (error) {
-    res.status(500).json({ error: 'Failed to create admin user', details: error.message });
-  }
-});
 
 startServer();
