@@ -116,3 +116,12 @@ export const authOptions: NextAuthOptions = {
   secret: process.env.NEXTAUTH_SECRET,
   debug: true, // Enable debug mode for more detailed logs in Vercel
 };
+
+// Log environment status at startup (only on server side)
+if (typeof window === "undefined") {
+  console.log("--- NextAuth Environment Check ---");
+  console.log("NEXTAUTH_SECRET:", process.env.NEXTAUTH_SECRET ? "SET (Length: " + process.env.NEXTAUTH_SECRET.length + ")" : "MISSING ❌");
+  console.log("NEXTAUTH_URL:", process.env.NEXTAUTH_URL || "MISSING ❌");
+  console.log("NEXT_PUBLIC_BACKEND_URL:", process.env.NEXT_PUBLIC_BACKEND_URL || "MISSING (Using Fallback)");
+  console.log("----------------------------------");
+}
