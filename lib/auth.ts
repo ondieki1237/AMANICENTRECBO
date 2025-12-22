@@ -11,14 +11,26 @@ export const authOptions: NextAuthOptions = {
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
-        console.log('Auth attempt with email:', credentials?.email);
+        console.log('--- Auth Attempt Diagnostics ---');
+        console.log('Email:', credentials?.email);
+        console.log('BACKEND_URL:', process.env.NEXT_PUBLIC_BACKEND_URL ? 'Set' : 'MISSING');
+        console.log('NEXTAUTH_SECRET:', process.env.NEXTAUTH_SECRET ? 'Set' : 'MISSING');
+        console.log('NEXTAUTH_URL:', process.env.NEXTAUTH_URL || 'Not explicitly set (Next.js will try to infer)');
+
+        if (!process.env.NEXT_PUBLIC_BACKEND_URL) {
+          console.error('CRITICAL: NEXT_PUBLIC_BACKEND_URL is not defined');
+          throw new Error("Server configuration error: Backend URL is missing");
+        }
 
         if (!credentials?.email || !credentials?.password) {
           throw new Error("Please enter an email and password");
         }
 
         try {
-          const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/login`, {
+          const loginUrl = `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/login`;
+          console.log('Attempting fetch to:', loginUrl);
+
+          const res = await fetch(loginUrl, {
             method: 'POST',
             body: JSON.stringify({
               email: credentials.email,
@@ -27,7 +39,14 @@ export const authOptions: NextAuthOptions = {
             headers: { "Content-Type": "application/json" }
           });
 
-          const user = await res.json();
+          // Handle non-JSON or error responses gracefully
+          let user;
+          try {
+            user = await res.json();
+          } catch (e) {
+            console.error('Failed to parse response JSON:', e);
+            throw new Error("Invalid response from authentication server");
+          }
 
           if (res.ok && user) {
             console.log('Authentication successful through backend API');
@@ -40,9 +59,10 @@ export const authOptions: NextAuthOptions = {
             };
           }
 
-          throw new Error(user.error || "Invalid credentials");
+          console.log('Authentication failed:', user?.error || 'Unknown error');
+          throw new Error(user?.error || "Invalid credentials");
         } catch (error: any) {
-          console.error("Authentication error:", error);
+          console.error("Authentication error details:", error);
           throw new Error(error.message || "Authentication failed");
         }
       },
@@ -61,7 +81,7 @@ export const authOptions: NextAuthOptions = {
     },
     async session({ session, token }) {
       // Use the actual backend JWT as the access token
-      session.accessToken = token.jwt;
+      session.accessToken = token.jwt as string;
       if (token) {
         session.user.id = token.id as string;
         session.user.email = token.email as string;
