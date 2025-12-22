@@ -35,8 +35,11 @@ import AreasOfFocusPage from "../components/areasoffocus";
 import Radioplayer from "../components/radiosection";
 import OurStoryPage from "../app/Story/page";
 import { motion, useReducedMotion } from "framer-motion";
+import "slick-carousel/slick/slick-theme.css"; // Import slick theme CSS
 import Link from "next/link";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { getBackendUrl } from "../lib/utils";
 
 interface Post {
   _id: number;
@@ -62,10 +65,9 @@ export default function HomePage() {
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        if (!process.env.NEXT_PUBLIC_BACKEND_URL) {
-          throw new Error("Backend URL is not defined");
-        }
-        const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/news`);
+        const res = await fetch(`${getBackendUrl()}/api/news`, {
+          cache: "no-store",
+        });
         if (!res.ok) throw new Error(`Failed to fetch posts: ${res.statusText}`);
         const data = await res.json();
         if (!Array.isArray(data)) {
@@ -133,22 +135,22 @@ export default function HomePage() {
   const newsVariants = shouldReduceMotion
     ? { hidden: { opacity: 0 }, visible: { opacity: 1 } }
     : {
-        hidden: { opacity: 0, y: 20 },
-        visible: {
-          opacity: 1,
-          y: 0,
-          transition: {
-            duration: 0.6,
-            ease: "easeOut",
-          },
+      hidden: { opacity: 0, y: 20 },
+      visible: {
+        opacity: 1,
+        y: 0,
+        transition: {
+          duration: 0.6,
+          ease: [0.6, 0.05, -0.01, 0.9],
         },
-      };
+      },
+    };
 
   const handleOurWorkClick = (e: React.MouseEvent) => {
     e.preventDefault();
     const el = document.getElementById("work");
     if (el) el.scrollIntoView({ behavior: "smooth" });
-    setIsOpen(false); // For mobile menu
+    // setIsOpen(false); // For mobile menu - commented out as setIsOpen is not defined
   };
 
   return (
@@ -161,60 +163,60 @@ export default function HomePage() {
       <AreasOfFocusPage />
 
       {/* Who We Are Section with Neumorphism */}
-<section id="story" className="py-24 bg-gray-100">
-  <div className="max-w-screen-xl mx-auto px-2 sm:px-4 lg:px-6">
-    <div className="grid lg:grid-cols-2 gap-16 items-center">
-      <div>
-        {/* Neumorphic Tag */}
-        <div className="inline-block px-6 py-3 rounded-full mb-6 bg-gray-100 shadow-[8px_8px_16px_#d1d5db,-8px_-8px_16px_#ffffff]">
-          <p className="text-emerald-600 font-semibold text-sm tracking-wide uppercase">Who We Are</p>
-        </div>
+      <section id="story" className="py-24 bg-gray-100">
+        <div className="max-w-screen-xl mx-auto px-2 sm:px-4 lg:px-6">
+          <div className="grid lg:grid-cols-2 gap-16 items-center">
+            <div>
+              {/* Neumorphic Tag */}
+              <div className="inline-block px-6 py-3 rounded-full mb-6 bg-gray-100 shadow-[8px_8px_16px_#d1d5db,-8px_-8px_16px_#ffffff]">
+                <p className="text-emerald-600 font-semibold text-sm tracking-wide uppercase">Who We Are</p>
+              </div>
 
-        <h2 className="font-display text-4xl md:text-5xl text-gray-900 mb-8">Who We Are</h2>
-        <div className="w-24 h-1 bg-emerald-600 mb-8 rounded-full"></div>
+              <h2 className="font-display text-4xl md:text-5xl text-gray-900 mb-8">Who We Are</h2>
+              <div className="w-24 h-1 bg-emerald-600 mb-8 rounded-full"></div>
 
-        <div className="space-y-6">
-          <p className="text-xl text-gray-600 leading-relaxed">
-            We are a <span className="font-semibold text-emerald-600">youth-led organisation</span> based in
-            Minjila, Tana River County, Kenya. Established in{" "}
-            <span className="font-semibold text-red-600">2016</span>, we exist to champion peace and development
-            projects for rural communities in the Tana region.
-          </p>
+              <div className="space-y-6">
+                <p className="text-xl text-gray-600 leading-relaxed">
+                  We are a <span className="font-semibold text-emerald-600">youth-led organisation</span> based in
+                  Minjila, Tana River County, Kenya. Established in{" "}
+                  <span className="font-semibold text-red-600">2016</span>, we exist to champion peace and development
+                  projects for rural communities in the Tana region.
+                </p>
 
-          {/* Neumorphic Mission Card */}
-          <div className="p-8 rounded-2xl bg-gray-100 shadow-[8px_8px_16px_#d1d5db,-8px_-8px_16px_#ffffff] hover:shadow-[inset_8px_8px_16px_#d1d5db,inset_-8px_-8px_16px_#ffffff] transition">
-            <h3 className="font-display text-2xl text-gray-900 mb-4">Our Mission</h3>
-            <p className="text-gray-700 text-lg leading-relaxed">
-              To bridge communities through innovative media and ICT solutions, creating pathways for economic
-              empowerment, social cohesion, and sustainable development in Tana River County.
-            </p>
-          </div>
+                {/* Neumorphic Mission Card */}
+                <div className="p-8 rounded-2xl bg-gray-100 shadow-[8px_8px_16px_#d1d5db,-8px_-8px_16px_#ffffff] hover:shadow-[inset_8px_8px_16px_#d1d5db,inset_-8px_-8px_16px_#ffffff] transition">
+                  <h3 className="font-display text-2xl text-gray-900 mb-4">Our Mission</h3>
+                  <p className="text-gray-700 text-lg leading-relaxed">
+                    To bridge communities through innovative media and ICT solutions, creating pathways for economic
+                    empowerment, social cohesion, and sustainable development in Tana River County.
+                  </p>
+                </div>
 
-          {/* Neumorphic Button */}
-          <Link 
-            href="/Story" 
-            className="inline-block mt-6 px-8 py-3 text-emerald-700 font-semibold rounded-full transition duration-300 
+                {/* Neumorphic Button */}
+                <Link
+                  href="/Story"
+                  className="inline-block mt-6 px-8 py-3 text-emerald-700 font-semibold rounded-full transition duration-300 
                        bg-gray-100 shadow-[6px_6px_12px_#d1d5db,-6px_-6px_12px_#ffffff] 
                        hover:shadow-[inset_6px_6px_12px_#d1d5db,inset_-6px_-6px_12px_#ffffff]"
-          >
-            Get the full story
-          </Link>
-        </div>
-      </div>
+                >
+                  Get the full story
+                </Link>
+              </div>
+            </div>
 
-      {/* Neumorphic Image Container */}
-      <div className="flex justify-center">
-        <div className="p-4 rounded-2xl bg-gray-100 shadow-[12px_12px_24px_#d1d5db,-12px_-12px_24px_#ffffff]">
-          <img
-            src="/images/image1.png"
-            alt="Community impact in Tana River"
-            className="w-full max-w-lg rounded-xl object-cover"
-          />
+            {/* Neumorphic Image Container */}
+            <div className="flex justify-center">
+              <div className="p-4 rounded-2xl bg-gray-100 shadow-[12px_12px_24px_#d1d5db,-12px_-12px_24px_#ffffff]">
+                <img
+                  src="/images/image1.png"
+                  alt="Community impact in Tana River"
+                  className="w-full max-w-lg rounded-xl object-cover"
+                />
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
-  </div>
-</section>
+      </section>
 
 
       {/* Our Approach Section */}
@@ -270,12 +272,12 @@ export default function HomePage() {
         </div>
       </section>
 
-      
+
       {/* Radio Stream Section */}
       <Radioplayer />
       {/* News Section */}
       <MediaHubPage />
-      
+
       {/* Sponsors Carousel */}
       <SponsorsCarousel />
 

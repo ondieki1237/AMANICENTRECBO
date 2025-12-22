@@ -19,6 +19,7 @@ import Link from "@tiptap/extension-link";
 import Image from "@tiptap/extension-image";
 import { Session } from "next-auth";
 import dynamic from "next/dynamic";
+import { getBackendUrl } from "../../lib/utils";
 
 interface Post {
   _id: string;
@@ -215,120 +216,137 @@ export default function AdminDashboard() {
     }
   }, [editor, selectedPost]);
 
-// ... other imports and code remain the same
-const fetchPosts = async () => {
-  setLoading(true);
-  try {
-    if (!session?.accessToken) {
-      throw new Error("Authentication token is missing. Please sign in again.");
-    }
-    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/news`, {
-      headers: { Authorization: `Bearer ${session.accessToken}` },
-    });
-    console.log("Fetch posts response status:", response.status);
-    const data = await response.json();
-    console.log("Fetch posts data:", data);
-    if (!response.ok) {
-      throw new Error(data.error || `Failed to fetch posts (status: ${response.status})`);
-    }
-    setPosts(data || []);
-  } catch (error: any) {
-    setError(`Failed to fetch posts: ${error.message}`);
-    console.error("Fetch posts error:", error);
-  } finally {
-    setLoading(false);
-  }
-};
-
-const handleSubmit = async (e: React.FormEvent) => {
-  e.preventDefault();
-  setError("");
-  setLoading(true);
-
-  try {
-    let imageUrl = imagePreview;
-    // const Taliro: The code already does this correctly.
-    const form = e.target as HTMLFormElement;
-    const imageFile = form.image?.files?.[0];
-    console.log("Selected image file:", imageFile?.name);
-    if (imageFile) {
-      console.log("Uploading image to Cloudinary:", imageFile.name, imageFile.type, imageFile.size);
-      try {
-        imageUrl = await uploadToCloudinary(imageFile);
-        console.log("Cloudinary image URL:", imageUrl);
-      } catch (uploadError: any) {
-        console.error("Image upload error:", uploadError);
-        throw new Error(`Failed to upload image: ${uploadError.message}`);
+  // ... other imports and code remain the same
+  const fetchPosts = async () => {
+    setLoading(true);
+    try {
+      if (!session?.accessToken) {
+        throw new Error("Authentication token is missing. Please sign in again.");
       }
+      const response = await fetch(`${getBackendUrl()}/api/news`, {
+        headers: { Authorization: `Bearer ${session.accessToken}` },
+        cache: "no-store", // Add cache: "no-store" to ensure fresh data
+      });
+      console.log("Fetch posts response status:", response.status);
+      const data = await response.json();
+      console.log("Fetch posts data:", data);
+      if (!response.ok) {
+        throw new Error(data.error || `Failed to fetch posts (status: ${response.status})`);
+      }
+      setPosts(data || []);
+    } catch (error: any) {
+      setError(`Failed to fetch posts: ${error.message}`);
+      console.error("Fetch posts error:", error);
+    } finally {
+      setLoading(false);
     }
+  };
 
-    const payload = {
-      ...formData,
-      image: imageUrl || null,
-      tags: formData.tags.split(",").map((tag) => tag.trim()).filter((tag) => tag),
-    };
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError("");
+    setLoading(true);
 
-    console.log("Sending payload to backend:", payload); // Debug payload
+    try {
+      let imageUrl = imagePreview;
+      // const Taliro: The code already does this correctly.
+      const form = e.target as HTMLFormElement;
+      const imageFile = form.image?.files?.[0];
+      console.log("Selected image file:", imageFile?.name);
+      if (imageFile) {
+        console.log("Uploading image to Cloudinary:", imageFile.name, imageFile.type, imageFile.size);
+        try {
+          imageUrl = await uploadToCloudinary(imageFile);
+          console.log("Cloudinary image URL:", imageUrl);
+        } catch (uploadError: any) {
+          console.error("Image upload error:", uploadError);
+          throw new Error(`Failed to upload image: ${uploadError.message}`);
+        }
+      }
 
-    const url = selectedPost
-      ? `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/news?id=${selectedPost._id}`
-      : `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/news`;
-    const method = selectedPost ? "PUT" : "POST";
+      const payload = {
+        ...formData,
+        image: imageUrl || null,
+        tags: formData.tags.split(",").map((tag) => tag.trim()).filter((tag) => tag),
+      };
 
-const response = await fetch(url, {
-  method,
-  headers: {
-    "Content-Type": "application/json",
-    Authorization: `Bearer ${session?.accessToken}`,
-  },
-  body: JSON.stringify(payload),
-});
+      console.log("Sending payload to backend:", payload); // Debug payload
 
-    if (!response.ok) {
-      const errorData = await response.json();
-      console.error("Backend error:", errorData);
-      throw new Error(errorData.error || "Failed to save post");
+      const url = selectedPost
+        ? `${getBackendUrl()}/api/news?id=${selectedPost._id}`
+        : `${getBackendUrl()}/api/news`;
+      const method = selectedPost ? "PUT" : "POST";
+
+      const response = await fetch(url, {
+        method,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${session?.accessToken}`,
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error("Backend error:", errorData);
+        throw new Error(errorData.error || "Failed to save post");
+      }
+
+      const responseData = await response.json();
+      console.log("Backend response:", responseData); // Debug response
+
+      setShowSuccess(true);
+      resetForm();
+      fetchPosts();
+    } catch (error: any) {
+      setError(`Error saving post: ${error.message}`);
+      console.error("Submit error:", error);
+    } finally {
+      setLoading(false);
     }
+  };
 
-    const responseData = await response.json();
-    console.log("Backend response:", responseData); // Debug response
-
-    setShowSuccess(true);
-    resetForm();
-    fetchPosts();
-  } catch (error: any) {
-    setError(`Error saving post: ${error.message}`);
-    console.error("Submit error:", error);
-  } finally {
-    setLoading(false);
-  }
-};
-
-const handleDelete = async (id: string) => {
-  setError("");
-  setLoading(true);
-  try {
-    if (!session?.accessToken) {
-      throw new Error("Authentication token is missing. Please sign in again.");
+  const handleDelete = async (id: string) => {
+    setError("");
+    setLoading(true);
+    try {
+      if (!session?.accessToken) {
+        throw new Error("Authentication token is missing. Please sign in again.");
+      }
+      const response = await fetch(`${getBackendUrl()}/api/news/${id}`, {
+        method: "DELETE",
+        headers: { Authorization: `Bearer ${session.accessToken}` },
+        cache: "no-store", // Add cache: "no-store" to ensure fresh data
+      });
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Failed to delete post");
+      }
+      fetchPosts();
+    } catch (error: any) {
+      setError(`Error deleting post: ${error.message}`);
+      console.error("Delete error:", error);
+    } finally {
+      setLoading(false);
+      setShowDeleteConfirm(null);
     }
-    const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/news/${id}`, {
-      method: "DELETE",
-      headers: { Authorization: `Bearer ${session.accessToken}` },
+  };
+  const handleEdit = (post: Post) => {
+    setSelectedPost(post);
+    setIsEditing(true);
+    setFormData({
+      title: post.title,
+      excerpt: post.excerpt,
+      content: post.content,
+      date: new Date(post.date).toISOString().split("T")[0],
+      readTime: post.readTime,
+      category: post.category,
+      tags: post.tags.join(", "),
+      slug: post.slug,
     });
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.error || "Failed to delete post");
-    }
-    fetchPosts();
-  } catch (error: any) {
-    setError(`Error deleting post: ${error.message}`);
-    console.error("Delete error:", error);
-  } finally {
-    setLoading(false);
-    setShowDeleteConfirm(null);
-  }
-};
-
+    editor?.commands.setContent(post.content);
+    setImagePreview(post.image || null);
+  };
 
   const resetForm = () => {
     setSelectedPost(null);

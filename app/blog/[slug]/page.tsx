@@ -11,6 +11,7 @@ import { motion } from "framer-motion";
 import Slider from "react-slick"; // Import react-slick
 import "slick-carousel/slick/slick.css"; // Import slick CSS
 import "slick-carousel/slick/slick-theme.css"; // Import slick theme CSS
+import { getBackendUrl } from "../../../lib/utils";
 
 interface Post {
   _id: string;
@@ -38,7 +39,7 @@ export default function BlogPost({ params }: { params: { slug: string } }) {
     const fetchPost = async () => {
       try {
         console.log("Fetching post with slug:", params.slug);
-        const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/news/${params.slug}`, {
+        const res = await fetch(`${getBackendUrl()}/api/news/${params.slug}`, {
           cache: "no-store",
         });
         console.log("Fetch response status:", res.status);
@@ -51,7 +52,7 @@ export default function BlogPost({ params }: { params: { slug: string } }) {
         if (!data) throw new Error(`Post with slug '${params.slug}' not found`);
         setPost(data);
 
-        const relatedUrl = `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/news?category=${encodeURIComponent(
+        const relatedUrl = `${getBackendUrl()}/api/news?category=${encodeURIComponent(
           data.category
         )}&exclude=${data._id}&limit=3`;
         console.log("Related posts URL:", relatedUrl);
@@ -75,7 +76,7 @@ export default function BlogPost({ params }: { params: { slug: string } }) {
 
     const fetchAllPosts = async () => {
       try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/news`, {
+        const res = await fetch(`${getBackendUrl()}/api/news`, {
           cache: "no-store",
         });
         if (!res.ok) throw new Error(`Failed to fetch all posts (status: ${res.status})`);
@@ -122,7 +123,7 @@ export default function BlogPost({ params }: { params: { slug: string } }) {
 
   const heroVariants = {
     hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
   };
 
   const metadataVariants = {

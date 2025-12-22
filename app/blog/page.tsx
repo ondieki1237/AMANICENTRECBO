@@ -9,6 +9,7 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import { ArrowRight, Calendar, Clock, Search } from "lucide-react";
 import Image from "next/image";
+import { getBackendUrl } from "../../lib/utils";
 
 
 interface Post {
@@ -33,7 +34,7 @@ const BlogPage = () => {
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/news`, {
+        const res = await fetch(`${getBackendUrl()}/api/news`, {
           cache: "no-store",
         });
         if (!res.ok) throw new Error(`Failed to fetch posts (status: ${res.status})`);
@@ -65,7 +66,7 @@ const BlogPage = () => {
 
   const heroVariants = {
     hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.6 } },
   };
 
   if (loading) {

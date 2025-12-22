@@ -1,5 +1,6 @@
 import { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
+import { getBackendUrl } from "./utils";
 // Direct DB imports removed as we now use the backend API
 
 export const authOptions: NextAuthOptions = {
@@ -13,18 +14,18 @@ export const authOptions: NextAuthOptions = {
       async authorize(credentials) {
         console.log('--- Auth Attempt Diagnostics ---');
         console.log('Email:', credentials?.email);
-        console.log('BACKEND_URL:', process.env.NEXT_PUBLIC_BACKEND_URL ? 'Set' : 'MISSING');
         console.log('NEXTAUTH_SECRET:', process.env.NEXTAUTH_SECRET ? 'Set' : 'MISSING');
         console.log('NEXTAUTH_URL:', process.env.NEXTAUTH_URL || 'Not explicitly set (Next.js will try to infer)');
 
+        const backendUrl = getBackendUrl();
+        console.log('Using BACKEND_URL:', backendUrl);
+
         if (!process.env.NEXT_PUBLIC_BACKEND_URL) {
-          console.error('CRITICAL: NEXT_PUBLIC_BACKEND_URL is not defined');
-          throw new Error("Server configuration error: Backend URL is missing");
+          console.warn('WARNING: NEXT_PUBLIC_BACKEND_URL is not defined, using fallback:', backendUrl);
         }
 
         if (!process.env.NEXTAUTH_SECRET) {
           console.error('CRITICAL: NEXTAUTH_SECRET is not defined in production');
-          // No need to throw here as NextAuth might handle it, but it helps debugging
         }
 
         if (!credentials?.email || !credentials?.password) {
@@ -32,7 +33,7 @@ export const authOptions: NextAuthOptions = {
         }
 
         try {
-          const loginUrl = `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/login`;
+          const loginUrl = `${backendUrl}/api/login`;
           console.log('Attempting fetch to:', loginUrl);
 
           const res = await fetch(loginUrl, {
