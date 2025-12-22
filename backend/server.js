@@ -93,13 +93,25 @@ const setupModels = () => {
 
 // Middleware
 const setupMiddleware = () => {
-  // CORS Configuration
-  app.use(cors({
-    origin: '*',
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept'],
-    credentials: false
-  }));
+  app.use((req, res, next) => {
+    const origin = req.headers.origin;
+    // Mirror the origin if it matches our list, otherwise allow *
+    if (origin && (CONFIG.ALLOWED_ORIGINS.includes(origin) || origin.endsWith('.vercel.app') || origin.endsWith('.onrender.com'))) {
+      res.setHeader('Access-Control-Allow-Origin', origin);
+    } else {
+      res.setHeader('Access-Control-Allow-Origin', '*');
+    }
+
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With, Accept');
+    res.setHeader('Access-Control-Allow-Credentials', 'false');
+
+    // Handle pre-flight
+    if (req.method === 'OPTIONS') {
+      return res.status(200).end();
+    }
+    next();
+  });
 
   app.use(express.json());
   app.use(fileUpload());
@@ -493,6 +505,21 @@ const setupRoutes = (controllers) => {
   app.post('/api/send-email', controllers.email.sendContact);
   app.post('/api/volunteer-application', controllers.email.sendVolunteerApplication);
 };
+
+// Setup everything immediately
+const models = setupModels();
+setupMiddleware();
+const controllers = createControllers(models);
+setupRoutes(controllers);
+
+// Global Error Handler
+app.use((err, req, res, next) => {
+  console.error('Unhandled Error:', err);
+  res.status(500).json({
+    error: 'Internal Server Error',
+    details: process.env.NODE_ENV === 'development' ? err.message : undefined
+  });
+});
 
 // Server Initialization
 const startServer = async () => {
