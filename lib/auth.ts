@@ -1,9 +1,6 @@
 import { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import connectDB from "./mongodb";
-import User from "../backend/models/User";
-
-import bcrypt from "bcryptjs";
+// Direct DB imports removed as we now use the backend API
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -17,42 +14,33 @@ export const authOptions: NextAuthOptions = {
         console.log('Auth attempt with email:', credentials?.email);
 
         if (!credentials?.email || !credentials?.password) {
-          console.log('Missing credentials:', {
-            hasEmail: !!credentials?.email,
-            hasPassword: !!credentials?.password
-          });
           throw new Error("Please enter an email and password");
         }
 
-        // Database authentication
         try {
-          console.log('Connecting to database...');
-          await connectDB();
-          console.log('Database connected successfully');
+          const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/login`, {
+            method: 'POST',
+            body: JSON.stringify({
+              email: credentials.email,
+              password: credentials.password,
+            }),
+            headers: { "Content-Type": "application/json" }
+          });
 
-          console.log('Searching for user with email:', credentials.email.toLowerCase());
-          const user = await User.findOne({ email: credentials.email.toLowerCase() });
-          console.log('User found:', !!user);
+          const user = await res.json();
 
-          if (!user) {
-            throw new Error("No user found with this email");
+          if (res.ok && user) {
+            console.log('Authentication successful through backend API');
+            return {
+              id: user.id || user._id,
+              email: user.email,
+              username: user.username,
+              role: user.role,
+              jwt: user.jwt, // Store the token
+            };
           }
 
-          console.log('Comparing passwords...');
-          const isPasswordValid = await user.comparePassword(credentials.password);
-          console.log('Password valid:', isPasswordValid);
-
-          if (!isPasswordValid) {
-            throw new Error("Invalid password");
-          }
-
-          console.log('Authentication successful');
-          return {
-            id: user._id.toString(),
-            email: user.email,
-            username: user.username,
-            role: user.role,
-          };
+          throw new Error(user.error || "Invalid credentials");
         } catch (error: any) {
           console.error("Authentication error:", error);
           throw new Error(error.message || "Authentication failed");
@@ -67,12 +55,13 @@ export const authOptions: NextAuthOptions = {
         token.email = user.email;
         token.username = user.username;
         token.role = user.role;
+        token.jwt = user.jwt; // Store backend JWT in token
       }
       return token;
     },
     async session({ session, token }) {
-      // Populate session with token data for client-side access
-      session.accessToken = (token.jti as string) || token.id; // Use JWT ID as access token
+      // Use the actual backend JWT as the access token
+      session.accessToken = token.jwt;
       if (token) {
         session.user.id = token.id as string;
         session.user.email = token.email as string;

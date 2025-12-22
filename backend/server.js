@@ -48,7 +48,7 @@ const CONFIG = {
 const validateEnv = () => {
   const requiredVars = ['MONGODB_URI', 'JWT_SECRET', 'EMAIL_USER', 'EMAIL_PASS'];
   const missingVars = requiredVars.filter(v => !process.env[v]);
-  
+
   if (missingVars.length > 0) {
     console.error(`Missing required environment variables: ${missingVars.join(', ')}`);
     process.exit(1);
@@ -72,9 +72,11 @@ const setupModels = () => {
   });
 
   const userSchema = new mongoose.Schema({
-    email: { type: String, required: true, unique: true },
+    username: { type: String, required: true, unique: true },
+    email: { type: String, required: true, unique: true, lowercase: true },
     password: { type: String, required: true },
-  });
+    role: { type: String, enum: ['user', 'admin'], default: 'user' }
+  }, { timestamps: true });
 
   return {
     News: mongoose.model("News", newsSchema),
@@ -101,7 +103,7 @@ const authMiddleware = {
   authenticateToken: (req, res, next) => {
     const authHeader = req.headers["authorization"];
     const token = authHeader?.split(" ")[1];
-    
+
     if (!token) return res.status(401).json({ error: "Unauthorized" });
 
     jwt.verify(token, CONFIG.JWT_SECRET, (err, user) => {
@@ -167,7 +169,7 @@ const utils = {
       console.error("Invalid file format:", file.mimetype);
       throw new Error('Invalid image format');
     }
-    
+
     const imagePath = `/uploads/${Date.now()}_${file.name}`;
     await file.mv(path.join(dir, imagePath));
     return imagePath;
@@ -203,7 +205,7 @@ const createControllers = (models) => {
           const hashedPassword = await bcrypt.hash(password, 10);
           const user = new User({ email, password: hashedPassword });
           await user.save();
-          
+
           res.status(201).json({ message: "User created" });
         } catch (err) {
           res.status(500).json({ error: "Registration failed: " + err.message });
@@ -222,8 +224,14 @@ const createControllers = (models) => {
             return res.status(401).json({ error: "Invalid credentials" });
           }
 
-          const token = jwt.sign({ id: user._id }, CONFIG.JWT_SECRET, { expiresIn: "1h" });
-          res.json({ jwt: token, id: user._id });
+          const token = jwt.sign({ id: user._id, role: user.role }, CONFIG.JWT_SECRET, { expiresIn: "1h" });
+          res.json({
+            jwt: token,
+            id: user._id,
+            email: user.email,
+            username: user.username,
+            role: user.role
+          });
         } catch (err) {
           res.status(500).json({ error: "Login failed: " + err.message });
         }
@@ -235,14 +243,14 @@ const createControllers = (models) => {
         try {
           const { category, exclude, limit } = req.query;
           const query = {};
-          
+
           if (category) query.category = category;
           if (exclude) query._id = { $ne: exclude };
-          
+
           const posts = await News.find(query)
             .limit(parseInt(limit) || 10)
             .sort({ date: -1 });
-            
+
           res.json(posts);
         } catch (err) {
           res.status(500).json({ error: "Failed to fetch posts: " + err.message });
@@ -266,7 +274,7 @@ const createControllers = (models) => {
 
           const { title, excerpt, content, date, readTime, category, tags, slug, image } = req.body;
           const requiredFields = { title, excerpt, content, date, readTime, category, slug };
-          
+
           if (Object.values(requiredFields).some(field => !field)) {
             return res.status(400).json({ error: "All required fields must be provided" });
           }
@@ -298,7 +306,7 @@ const createControllers = (models) => {
           console.log("Saved post:", post);
           res.status(201).json(post);
         } catch (err) {
-          res.status(500).json({ 
+          res.status(500).json({
             error: "Failed to create post: " + (err.message.includes('tags') ? 'Invalid tags format' : err.message)
           });
         }
@@ -311,7 +319,7 @@ const createControllers = (models) => {
 
           const { title, excerpt, content, date, readTime, category, tags, slug, image } = req.body;
           const requiredFields = { title, excerpt, content, date, readTime, category, slug };
-          
+
           if (Object.values(requiredFields).some(field => !field)) {
             return res.status(400).json({ error: "All required fields must be provided" });
           }
@@ -342,7 +350,7 @@ const createControllers = (models) => {
           if (!post) return res.status(404).json({ error: "Post not found" });
           res.json(post);
         } catch (err) {
-          res.status(500).json({ 
+          res.status(500).json({
             error: "Failed to update post: " + (err.message.includes('tags') ? 'Invalid tags format' : err.message)
           });
         }
@@ -363,7 +371,7 @@ const createControllers = (models) => {
       sendContact: async (req, res) => {
         try {
           const { name, email, phone = '', message, subject = 'New Contact from Amani Center Website' } = req.body;
-          
+
           if (!name || !email || !message) {
             return res.status(400).json({ error: 'Name, email, and message are required' });
           }
@@ -401,7 +409,7 @@ const createControllers = (models) => {
       sendVolunteerApplication: async (req, res) => {
         try {
           const { name, email, phone = '', skills = '', opportunities = [], message = '' } = req.body;
-          
+
           if (!name || !email) {
             return res.status(400).json({ error: 'Name and email are required' });
           }
@@ -542,26 +550,26 @@ app.post('/api/create-admin', async (req, res) => {
       password: { type: String, required: true },
       role: { type: String, enum: ['user', 'admin'], default: 'admin' }
     }, { timestamps: true }));
-    
+
     const email = process.env.ADMIN_EMAIL || 'bellarinseth@gmail.com';
     const password = process.env.ADMIN_PASSWORD || 'admin123';
-    
+
     // Check if admin already exists
     const existingUser = await User.findOne({ email: email.toLowerCase() });
     if (existingUser) {
       return res.status(200).json({ message: 'Admin user already exists', email });
     }
-    
+
     const hashedPassword = await bcrypt.hash(password, 10);
-    const user = new User({ 
+    const user = new User({
       username: 'admin',
-      email: email.toLowerCase(), 
+      email: email.toLowerCase(),
       password: hashedPassword,
       role: 'admin'
     });
-    
+
     await user.save();
-    res.status(201).json({ 
+    res.status(201).json({
       message: 'Admin user created successfully',
       email: user.email,
       username: user.username

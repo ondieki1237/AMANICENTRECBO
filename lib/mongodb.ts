@@ -7,7 +7,9 @@ if (!MONGODB_URI) {
   throw new Error('Please define the MONGODB_URI environment variable inside .env');
 }
 
-console.log('MongoDB URI:', MONGODB_URI); // Log the URI (without sensitive data)
+console.log('MongoDB URI Source:', process.env.MONGODB_URI ? 'Environment Variable' : 'Fallback Placeholder');
+const redactedUri = MONGODB_URI.replace(/:([^@]+)@/, ':****@');
+console.log('MongoDB URI (redacted):', redactedUri);
 
 let cached = global.mongoose;
 
