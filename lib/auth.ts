@@ -24,28 +24,7 @@ export const authOptions: NextAuthOptions = {
           throw new Error("Please enter an email and password");
         }
 
-        // Hardcoded admin credentials for testing
-        const HARDCODED_ADMIN = {
-          email: "bellarinseth@gmail.com",
-          password: "admin123",
-          id: "hardcoded-admin-id",
-          username: "admin",
-          role: "admin"
-        };
-
-        // Check hardcoded credentials first
-        if (credentials.email.toLowerCase() === HARDCODED_ADMIN.email.toLowerCase() &&
-          credentials.password === HARDCODED_ADMIN.password) {
-          console.log('Authentication successful using hardcoded credentials');
-          return {
-            id: HARDCODED_ADMIN.id,
-            email: HARDCODED_ADMIN.email,
-            username: HARDCODED_ADMIN.username,
-            role: HARDCODED_ADMIN.role,
-          };
-        }
-
-        // Try database authentication as fallback
+        // Database authentication
         try {
           console.log('Connecting to database...');
           await connectDB();
@@ -92,12 +71,13 @@ export const authOptions: NextAuthOptions = {
       return token;
     },
     async session({ session, token }) {
-      session.accessToken = token.jwt;
+      // Populate session with token data for client-side access
+      session.accessToken = (token.jti as string) || token.id; // Use JWT ID as access token
       if (token) {
-        session.user.id = token.id;
-        session.user.email = token.email;
-        session.user.username = token.username;
-        session.user.role = token.role;
+        session.user.id = token.id as string;
+        session.user.email = token.email as string;
+        session.user.username = token.username as string;
+        session.user.role = token.role as string;
       }
       return session;
     },

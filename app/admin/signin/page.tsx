@@ -18,9 +18,17 @@ export default function SignIn() {
     setError("");
     setLoading(true);
 
-    // Hardcoded credentials
-    const email = "bellarinseth@gmail.com";
-    const password = "admin123";
+    // Get credentials from form
+    const formData = new FormData(e.currentTarget);
+    const email = formData.get("email") as string;
+    const password = formData.get("password") as string;
+
+    // Validate inputs
+    if (!email || !password) {
+      setError("Please enter both email and password");
+      setLoading(false);
+      return;
+    }
 
     try {
       const result = await signIn("credentials", {
