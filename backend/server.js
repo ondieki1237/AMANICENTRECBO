@@ -160,17 +160,20 @@ const emailService = {
       await emailService.transporter.verify();
       console.log('Email transporter is ready');
     } catch (error) {
-      console.error('Email transporter verification failed:', error);
-      console.warn('Server will continue without email functionality');
-      // Don't exit - allow server to run without email
+      console.error('Email transporter verification failed:', error.message);
+      console.warn('Server will continue without email functionality. Check SMTP credentials.');
     }
   },
 
   sendEmail: async (options) => {
     try {
-      return await emailService.transporter.sendMail(options);
+      console.log(`Attempting to send email to: ${options.to}`);
+      const info = await emailService.transporter.sendMail(options);
+      console.log(`Email sent successfully: ${info.messageId}`);
+      return info;
     } catch (error) {
-      console.error('Email sending error:', error);
+      console.error('Email sending error:', error.message);
+      // We throw here because the controller handles the error response
       throw error;
     }
   }
@@ -549,17 +552,27 @@ const startServer = async () => {
     await emailService.verifyConnection();
 
     // Graceful shutdown
-    const shutdown = async () => {
-      console.log('Shutting down server...');
-      await mongoose.disconnect();
+    const shutdown = async (signal) => {
+      console.log(`Received ${signal}. Shutting down server...`);
+      try {
+        await mongoose.disconnect();
+        console.log('MongoDB connection closed');
+      } catch (err) {
+        console.error('Error during MongoDB disconnect:', err);
+      }
+
       server.close(() => {
-        console.log('Server closed');
+        console.log('Server process terminated');
         process.exit(0);
       });
     };
 
-    process.on('SIGINT', shutdown);
-    process.on('SIGTERM', shutdown);
+    process.on('SIGINT', () => shutdown('SIGINT'));
+    process.on('SIGTERM', () => shutdown('SIGTERM'));
+    process.on('unhandledRejection', (reason, promise) => {
+      console.error('Unhandled Rejection at:', promise, 'reason:', reason);
+      // Don't exit, but log it
+    });
   } catch (error) {
     console.error('Initial background connection failed:', error.message);
     // Let the server keep running, it will try to reconnect or just serve 5xx for data routes
