@@ -1,6 +1,5 @@
 import express from "express";
 import mongoose from "mongoose";
-import cors from "cors";
 import fileUpload from "express-fileupload";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
@@ -36,9 +35,9 @@ const CONFIG = {
     'https://amanicentercbo.org',
     'http://amanicentercbo.org',
     'https://www.amanicentercbo.org',
-    'https://backendmanager.vercel.app/',
+    'https://backendmanager.vercel.app',
     'https://amanicentrecbo-jmp7hkkz1-sethmose31-9319s-projects.vercel.app',
-    'https://amanicentrecbo.vercel.app/',
+    'https://amanicentrecbo.vercel.app',
     'https://amani.codewithseth.co.ke',
     'http://amani.codewithseth.co.ke'
   ],
@@ -96,7 +95,10 @@ const setupMiddleware = () => {
   app.use((req, res, next) => {
     const origin = req.headers.origin;
     // Mirror the origin if it matches our list, otherwise allow *
-    if (origin && (CONFIG.ALLOWED_ORIGINS.includes(origin) || origin.endsWith('.vercel.app') || origin.endsWith('.onrender.com'))) {
+    if (origin && (CONFIG.ALLOWED_ORIGINS.includes(origin) ||
+      origin.endsWith('.vercel.app') ||
+      origin.endsWith('.onrender.com') ||
+      origin.includes('codewithseth.co.ke'))) {
       res.setHeader('Access-Control-Allow-Origin', origin);
     } else {
       res.setHeader('Access-Control-Allow-Origin', '*');
