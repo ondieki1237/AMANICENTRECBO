@@ -22,6 +22,11 @@ export const authOptions: NextAuthOptions = {
           throw new Error("Server configuration error: Backend URL is missing");
         }
 
+        if (!process.env.NEXTAUTH_SECRET) {
+          console.error('CRITICAL: NEXTAUTH_SECRET is not defined in production');
+          // No need to throw here as NextAuth might handle it, but it helps debugging
+        }
+
         if (!credentials?.email || !credentials?.password) {
           throw new Error("Please enter an email and password");
         }
@@ -39,30 +44,39 @@ export const authOptions: NextAuthOptions = {
             headers: { "Content-Type": "application/json" }
           });
 
+          console.log('Response status:', res.status, res.statusText);
+
           // Handle non-JSON or error responses gracefully
-          let user;
+          let data;
+          const text = await res.text();
           try {
-            user = await res.json();
+            data = JSON.parse(text);
           } catch (e) {
-            console.error('Failed to parse response JSON:', e);
-            throw new Error("Invalid response from authentication server");
+            console.error('Failed to parse response JSON. Raw text:', text);
+            throw new Error(`Invalid response from backend (${res.status})`);
           }
 
-          if (res.ok && user) {
+          if (res.ok && data) {
             console.log('Authentication successful through backend API');
             return {
-              id: user.id || user._id,
-              email: user.email,
-              username: user.username,
-              role: user.role,
-              jwt: user.jwt, // Store the token
+              id: data.id || data._id,
+              email: data.email,
+              username: data.username,
+              role: data.role,
+              jwt: data.jwt, // Store the token
             };
           }
 
-          console.log('Authentication failed:', user?.error || 'Unknown error');
-          throw new Error(user?.error || "Invalid credentials");
+          console.log('Authentication failed:', data?.error || 'Unknown error');
+          throw new Error(data?.error || "Invalid credentials");
         } catch (error: any) {
           console.error("Authentication error details:", error);
+          if (error.name === 'AbortError') {
+            throw new Error("Authentication request timed out");
+          }
+          if (error.code === 'ECONNREFUSED' || error.message.includes('fetch')) {
+            throw new Error("Could not connect to authentication server. Please check BACKEND_URL.");
+          }
           throw new Error(error.message || "Authentication failed");
         }
       },
@@ -92,7 +106,7 @@ export const authOptions: NextAuthOptions = {
     },
   },
   pages: {
-    signIn: "/login",
+    signIn: "/admin/signin",
   },
   session: {
     strategy: "jwt",
