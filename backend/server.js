@@ -38,6 +38,7 @@ const CONFIG = {
     'https://www.amanicentercbo.org',
     'https://backendmanager.vercel.app/',
     'https://amanicentrecbo-jmp7hkkz1-sethmose31-9319s-projects.vercel.app',
+    'https://amanicentrecbo.vercel.app/',
     'https://amani.codewithseth.co.ke',
     'http://amani.codewithseth.co.ke'
   ],
