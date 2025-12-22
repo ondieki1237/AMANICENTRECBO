@@ -145,15 +145,25 @@ const authMiddleware = {
 
 // Email Service
 const emailService = {
-  transporter: nodemailer.createTransport({
-    host: process.env.EMAIL_HOST || 'smtp-relay.brevo.com',
-    port: parseInt(process.env.EMAIL_PORT || '587'),
-    secure: false,
-    auth: {
-      user: CONFIG.EMAIL_CONFIG.user,
-      pass: CONFIG.EMAIL_CONFIG.pass
-    }
-  }),
+  transporter: nodemailer.createTransport(
+    process.env.EMAIL_HOST?.includes('gmail')
+      ? {
+        service: 'gmail',
+        auth: {
+          user: CONFIG.EMAIL_CONFIG.user,
+          pass: CONFIG.EMAIL_CONFIG.pass
+        }
+      }
+      : {
+        host: process.env.EMAIL_HOST || 'smtp-relay.brevo.com',
+        port: parseInt(process.env.EMAIL_PORT || '587'),
+        secure: false,
+        auth: {
+          user: CONFIG.EMAIL_CONFIG.user,
+          pass: CONFIG.EMAIL_CONFIG.pass
+        }
+      }
+  ),
 
   verifyConnection: async () => {
     try {
