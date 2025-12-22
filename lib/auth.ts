@@ -108,10 +108,11 @@ export const authOptions: NextAuthOptions = {
   },
   pages: {
     signIn: "/admin/signin",
+    error: "/admin/error", // Redirect to custom error page for better debugging
   },
   session: {
     strategy: "jwt",
   },
   secret: process.env.NEXTAUTH_SECRET,
-  debug: true, // Enable debug mode
+  debug: true, // Enable debug mode for more detailed logs in Vercel
 };
