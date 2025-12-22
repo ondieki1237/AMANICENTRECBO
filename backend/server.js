@@ -32,6 +32,7 @@ const CONFIG = {
     'https://amanicentrecbo-client.onrender.com',
     'http://localhost:3000',
     'https://amanicentrecbo-beta.vercel.app',
+    'https://amanicentrecbo-beta.vercel.app/',
     'https://amanicentercbo.org',
     'http://amanicentercbo.org',
     'https://www.amanicentercbo.org',
@@ -94,11 +95,17 @@ const setupModels = () => {
 const setupMiddleware = () => {
   app.use((req, res, next) => {
     const origin = req.headers.origin;
-    // Mirror the origin if it matches our list, otherwise allow *
-    if (origin && (CONFIG.ALLOWED_ORIGINS.includes(origin) ||
-      origin.endsWith('.vercel.app') ||
-      origin.endsWith('.onrender.com') ||
-      origin.includes('codewithseth.co.ke'))) {
+    // Normalize origin: remove trailing slash for comparison
+    const normalizedOrigin = origin?.replace(/\/$/, '');
+
+    const isAllowed = origin && (
+      CONFIG.ALLOWED_ORIGINS.some(o => o.replace(/\/$/, '') === normalizedOrigin) ||
+      normalizedOrigin.endsWith('.vercel.app') ||
+      normalizedOrigin.endsWith('.onrender.com') ||
+      normalizedOrigin.includes('codewithseth.co.ke')
+    );
+
+    if (isAllowed) {
       res.setHeader('Access-Control-Allow-Origin', origin);
     } else {
       res.setHeader('Access-Control-Allow-Origin', '*');
