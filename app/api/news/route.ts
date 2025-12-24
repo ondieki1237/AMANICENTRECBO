@@ -54,7 +54,7 @@ export async function POST(request: Request) {
 
     const post = await Post.create({
       ...data,
-      author: session.user.username,
+      author: session.user.id,
       image: data.image || null, // Ensure image is null if not provided
     });
 
@@ -73,7 +73,14 @@ export async function PUT(request: Request) {
       return NextResponse.json({ error: 'Authentication required' }, { status: 401 });
     }
 
-    await connectDB();
+    const db = await connectDB();
+    
+    // Ensure connection is ready
+    if (db.connection.readyState !== 1) {
+      console.error('MongoDB not ready, state:', db.connection.readyState);
+      return NextResponse.json({ error: 'Database connection not ready' }, { status: 503 });
+    }
+    
     const data = await request.json();
     const { searchParams } = new URL(request.url);
     const id = searchParams.get('id');
@@ -85,7 +92,7 @@ export async function PUT(request: Request) {
     console.log('Received PUT payload for id:', id, data);
     const updatedPost = await Post.findByIdAndUpdate(
       id,
-      { ...data, author: session.user.username, image: data.image || null },
+      { ...data, author: session.user.id, image: data.image || null },
       { new: true }
     );
 
