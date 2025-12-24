@@ -273,7 +273,7 @@ export default function AdminDashboard() {
       console.log("Sending payload to backend:", payload); // Debug payload
 
       const url = selectedPost
-        ? `${getBackendUrl()}/api/news?id=${selectedPost._id}`
+        ? `${getBackendUrl()}/api/news/${selectedPost._id}`
         : `${getBackendUrl()}/api/news`;
       const method = selectedPost ? "PUT" : "POST";
 
