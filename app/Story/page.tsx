@@ -129,9 +129,13 @@ const OurStoryPage = () => {
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {[
-                { name: "AGRIPINA KHAVAI", image: "agripina.png" },
-                { name: "CAROLINE ISRAEL", image: "caroline-israel.jpg" },
-                { name: "NYAMBURA WAMATTHA", image: "nyambura-wamattha.jpg" },
+                { name: "AGRIPINA KHAVAI (Program Manager)", image: "agripina.png" },
+                { name: "CAROLINE ISRAEL (Project Coordinator)", image: "caroline-israel.jpg" },
+                { name: "SALMA MOHAMED (Finance Officer)", image: "https://raw.githubusercontent.com/BOBWANDATI/images/6f6a4d5aedaac4f35948c9bf35f8823be400cee0/WhatsApp%20Image%202026-02-23%20at%2012.48.23%20PM.jpeg" },
+                { name: "MAUREEN BUYA (Project Manager)", image: "https://raw.githubusercontent.com/BOBWANDATI/images/6f6a4d5aedaac4f35948c9bf35f8823be400cee0/WhatsApp%20Image%202026-02-23%20at%2012.48.23%20PM%20(1).jpeg" },
+                { name: "BOB WANDATI (Hub Manager)", image: "https://raw.githubusercontent.com/BOBWANDATI/images/6f6a4d5aedaac4f35948c9bf35f8823be400cee0/WhatsApp%20Image%202026-02-23%20at%2012.48.23%20PM%20(2).jpeg" },
+                { name: "HAWO FARAH (Communication)", image: "https://raw.githubusercontent.com/BOBWANDATI/images/6f6a4d5aedaac4f35948c9bf35f8823be400cee0/WhatsApp%20Image%202026-02-23%20at%2012.48.22%20PM.jpeg" },
+                { name: "MATI KODE (ICT Trainer)", image: "https://raw.githubusercontent.com/BOBWANDATI/images/6f6a4d5aedaac4f35948c9bf35f8823be400cee0/WhatsApp%20Image%202026-02-23%20at%2012.52.14%20PM.jpeg" },
               ].map((member, index) => (
                 <TeamMember key={index} member={member} borderColor="destructive" />
               ))}
