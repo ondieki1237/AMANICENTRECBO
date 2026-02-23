@@ -131,7 +131,7 @@ const OurStoryPage = () => {
               {[
                 { name: "AGRIPINA KHAVAI", image: "agripina.png" },
                 { name: "CAROLINE ISRAEL", image: "caroline-israel.jpg" },
-                { name: "NYAMBURA WAMATTHA", image: "nyambura-wamattha.jpg" },
+                { name: "Salma Mohamed", image: "https://raw.githubusercontent.com/BOBWANDATI/images/6f6a4d5aedaac4f35948c9bf35f8823be400cee0/WhatsApp%20Image%202026-02-23%20at%2012.48.23%20PM.jpeg"
               ].map((member, index) => (
                 <TeamMember key={index} member={member} borderColor="destructive" />
               ))}
