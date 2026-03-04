@@ -5,7 +5,9 @@ import Image from "next/image";
 
 const TeamMember = ({ member, borderColor }) => {
   const imagePath = member.image
-    ? `/images/${member.image}`
+    ? member.image.startsWith('/')
+      ? member.image
+      : `/images/${member.image}`
     : `/images/${member.name.toLowerCase().replace(/\s+/g, '-')}.jpg`;
   console.log(`Attempting to load image for ${member.name}: ${imagePath}`);
 
